@@ -78,7 +78,7 @@ struct DashboardView: View {
                     // Course (Ground Track)
                     SensorCardView(
                         title: "sensorCourse",
-                        value: SensorFormatters.formatHeading(locationManager.course >= 0 ? locationManager.course : 0),
+                        value: locationManager.course >= 0 ? SensorFormatters.formatHeading(locationManager.course) : "--",
                         unit: "unitDegrees",
                         icon: "arrow.triangle.turn.up.right.diamond",
                         themeColors: theme
