@@ -18,8 +18,10 @@ enum SensorFormatters {
 
     /// Format climbing speed in m/s with 2 decimal places
     static func formatClimbingSpeed(_ mps: Double) -> String {
-        let sign = mps > 0 ? "+" : mps < 0 ? "-" : ""
-        return String(format: "%@%.2f", sign, abs(mps))
+        let rounded = (abs(mps) * 100).rounded() / 100
+        if rounded == 0 { return "0.00" }
+        let sign = mps > 0 ? "+" : "-"
+        return String(format: "%@%.2f", sign, rounded)
     }
 
     /// Format heading/course as degrees with 0 decimal places

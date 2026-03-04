@@ -15,6 +15,9 @@ final class LocationManager: NSObject, CLLocationManagerDelegate {
     var previousAltitude: Double?
     var previousAltitudeTimestamp: Date?
     var climbingSpeed: Double = 0.0 // m/s
+    private var smoothedClimbingSpeed: Double = 0.0
+    private let climbSmoothingFactor: Double = 0.15
+    private let climbHysteresis: Double = 0.02
 
     var authorizationStatus: CLAuthorizationStatus = .notDetermined
 
@@ -83,7 +86,11 @@ final class LocationManager: NSObject, CLLocationManagerDelegate {
         if let prevAlt = previousAltitude, let prevTime = previousAltitudeTimestamp {
             let timeDelta = location.timestamp.timeIntervalSince(prevTime)
             if timeDelta > 0 {
-                climbingSpeed = (newAltitude - prevAlt) / timeDelta
+                let raw = (newAltitude - prevAlt) / timeDelta
+                smoothedClimbingSpeed += climbSmoothingFactor * (raw - smoothedClimbingSpeed)
+                if abs(smoothedClimbingSpeed - climbingSpeed) >= climbHysteresis {
+                    climbingSpeed = smoothedClimbingSpeed
+                }
             }
         }
         previousAltitude = newAltitude
