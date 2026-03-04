@@ -1,0 +1,112 @@
+import SwiftUI
+
+struct SettingsView: View {
+    @Bindable var settings: AppSettings
+    var onRateChanged: () -> Void
+
+    var body: some View {
+        Form {
+            Section {
+                Picker(selection: $settings.updateRate) {
+                    ForEach(UpdateRate.allCases) { rate in
+                        Text(rate.labelKey)
+                            .tag(rate)
+                    }
+                } label: {
+                    Label("settingsUpdateRate", systemImage: "gauge.with.dots.needle.33percent")
+                }
+                .onChange(of: settings.updateRate) {
+                    onRateChanged()
+                }
+
+                Text(settings.updateRate.descriptionKey)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            } header: {
+                Text("settingsSectionSensors")
+            }
+
+            Section {
+                Picker(selection: $settings.appearanceMode) {
+                    ForEach(AppearanceMode.allCases) { mode in
+                        Text(mode.labelKey)
+                            .tag(mode)
+                    }
+                } label: {
+                    Label("settingsAppearance", systemImage: "circle.lefthalf.filled")
+                }
+
+                Picker(selection: $settings.colorTheme) {
+                    ForEach(ColorTheme.allCases) { theme in
+                        HStack(spacing: 6) {
+                            Text(theme.labelKey)
+                            Spacer()
+                            ForEach(Array(theme.swatchColors.enumerated()), id: \.offset) { _, color in
+                                Circle()
+                                    .fill(color)
+                                    .frame(width: 16, height: 16)
+                            }
+                        }
+                        .tag(theme)
+                    }
+                } label: {
+                    Label("settingsColorTheme", systemImage: "paintpalette")
+                }
+                .pickerStyle(.navigationLink)
+            } header: {
+                Text("settingsSectionAppearance")
+            }
+        }
+        .navigationTitle("settingsTitle")
+    }
+}
+
+// MARK: - Localized labels for UpdateRate
+
+extension UpdateRate {
+    var labelKey: LocalizedStringKey {
+        switch self {
+        case .maximum: return "rateMaximum"
+        case .high: return "rateHigh"
+        case .medium: return "rateMedium"
+        case .low: return "rateLow"
+        }
+    }
+
+    var descriptionKey: LocalizedStringKey {
+        switch self {
+        case .maximum: return "rateMaximumDesc"
+        case .high: return "rateHighDesc"
+        case .medium: return "rateMediumDesc"
+        case .low: return "rateLowDesc"
+        }
+    }
+}
+
+extension AppearanceMode {
+    var labelKey: LocalizedStringKey {
+        switch self {
+        case .system: return "appearanceSystem"
+        case .light: return "appearanceLight"
+        case .dark: return "appearanceDark"
+        }
+    }
+}
+
+extension ColorTheme {
+    var labelKey: LocalizedStringKey {
+        switch self {
+        case .standard: return "themeStandard"
+        case .ocean: return "themeOcean"
+        case .forest: return "themeForest"
+        case .sunset: return "themeSunset"
+        case .berry: return "themeBerry"
+        }
+    }
+}
+
+#Preview {
+    NavigationStack {
+        SettingsView(settings: AppSettings(), onRateChanged: {})
+    }
+}
