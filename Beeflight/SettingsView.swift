@@ -53,11 +53,13 @@ struct SettingsView: View {
                     Label("settingsColorTheme", systemImage: "paintpalette")
                 }
                 .pickerStyle(.navigationLink)
+                .id(settings.colorTheme)
             } header: {
                 Text("settingsSectionAppearance")
             }
         }
         .navigationTitle("settingsTitle")
+        .tint(settings.themeColors.tint)
     }
 }
 
@@ -96,7 +98,7 @@ extension AppearanceMode {
 extension ColorTheme {
     var labelKey: LocalizedStringKey {
         switch self {
-        case .standard: return "themeStandard"
+        case .bee: return "themeBee"
         case .ocean: return "themeOcean"
         case .forest: return "themeForest"
         case .sunset: return "themeSunset"

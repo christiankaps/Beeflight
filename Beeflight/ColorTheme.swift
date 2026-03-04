@@ -14,7 +14,7 @@ struct ThemeColors {
 // MARK: - ColorTheme
 
 enum ColorTheme: String, CaseIterable, Identifiable {
-    case standard = "standard"
+    case bee = "bee"
     case ocean = "ocean"
     case forest = "forest"
     case sunset = "sunset"
@@ -24,13 +24,28 @@ enum ColorTheme: String, CaseIterable, Identifiable {
 
     var colors: ThemeColors {
         switch self {
-        case .standard:
+        case .bee:
             return ThemeColors(
-                cardBackground: Color(uiColor: .secondarySystemGroupedBackground),
-                cardAccent: Color.secondary,
-                valueText: Color.primary,
-                unitText: Color(uiColor: .tertiaryLabel),
-                tint: Color.accentColor
+                cardBackground: adaptive(
+                    light: UIColor(red: 1.0, green: 0.96, blue: 0.82, alpha: 1),
+                    dark: UIColor(red: 0.18, green: 0.15, blue: 0.08, alpha: 1)
+                ),
+                cardAccent: adaptive(
+                    light: UIColor(red: 0.55, green: 0.45, blue: 0.05, alpha: 1),
+                    dark: UIColor(red: 0.95, green: 0.80, blue: 0.20, alpha: 1)
+                ),
+                valueText: adaptive(
+                    light: UIColor(red: 0.12, green: 0.10, blue: 0.05, alpha: 1),
+                    dark: UIColor(red: 1.0, green: 0.95, blue: 0.75, alpha: 1)
+                ),
+                unitText: adaptive(
+                    light: UIColor(red: 0.50, green: 0.42, blue: 0.20, alpha: 1),
+                    dark: UIColor(red: 0.70, green: 0.62, blue: 0.35, alpha: 1)
+                ),
+                tint: adaptive(
+                    light: UIColor(red: 0.85, green: 0.65, blue: 0.0, alpha: 1),
+                    dark: UIColor(red: 1.0, green: 0.80, blue: 0.0, alpha: 1)
+                )
             )
         case .ocean:
             return ThemeColors(

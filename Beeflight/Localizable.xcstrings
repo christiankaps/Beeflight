@@ -647,19 +647,19 @@
         }
       }
     },
-    "themeStandard" : {
+    "themeBee" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Standard"
+            "value" : "Bee"
           }
         },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Standard"
+            "value" : "Biene"
           }
         }
       }
@@ -762,6 +762,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Koordinierte Weltzeit"
+          }
+        }
+      }
+    },
+    "sensorGForce" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "G-Force"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "G-Kraft"
+          }
+        }
+      }
+    },
+    "unitG" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "G"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "G"
           }
         }
       }

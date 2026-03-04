@@ -94,7 +94,7 @@ final class AppSettings {
            let theme = ColorTheme(rawValue: stored) {
             colorTheme = theme
         } else {
-            colorTheme = .standard
+            colorTheme = .bee
         }
     }
 }

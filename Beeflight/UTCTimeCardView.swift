@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct UTCTimeCardView: View {
-    var themeColors: ThemeColors = ColorTheme.standard.colors
+    var themeColors: ThemeColors = ColorTheme.bee.colors
 
     private static let utcTimeFormatter: DateFormatter = {
         let f = DateFormatter()
@@ -12,7 +12,7 @@ struct UTCTimeCardView: View {
 
     private static let utcDateFormatter: DateFormatter = {
         let f = DateFormatter()
-        f.dateFormat = "yyyy-MM-dd"
+        f.dateFormat = "dd.MM.yyyy"
         f.timeZone = TimeZone(identifier: "UTC")
         return f
     }()

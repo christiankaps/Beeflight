@@ -5,7 +5,7 @@ struct SensorCardView: View {
     let value: String
     let unit: LocalizedStringKey
     let icon: String
-    var themeColors: ThemeColors = ColorTheme.standard.colors
+    var themeColors: ThemeColors = ColorTheme.bee.colors
 
     var body: some View {
         VStack(spacing: 8) {

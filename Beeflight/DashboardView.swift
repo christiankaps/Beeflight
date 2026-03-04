@@ -3,6 +3,7 @@ import SwiftUI
 struct DashboardView: View {
     var locationManager: LocationManager
     var altimeterManager: AltimeterManager
+    var motionManager: MotionManager
     @Bindable var settings: AppSettings
 
     private let columns = [
@@ -92,6 +93,15 @@ struct DashboardView: View {
                         themeColors: theme
                     )
 
+                    // G-Force
+                    SensorCardView(
+                        title: "sensorGForce",
+                        value: SensorFormatters.formatGForce(motionManager.gForce),
+                        unit: "unitG",
+                        icon: "gauge.with.dots.needle.33percent",
+                        themeColors: theme
+                    )
+
                     // GPS Signal Quality
                     SensorCardView(
                         title: "sensorSatellites",
@@ -104,6 +114,7 @@ struct DashboardView: View {
                 .padding()
             }
             .navigationTitle("dashboardTitle")
+            .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     NavigationLink {
@@ -116,7 +127,7 @@ struct DashboardView: View {
                 }
             }
         }
-        .tint(theme.tint)
+        .tint(settings.themeColors.tint)
     }
 
     /// GPS quality estimate based on horizontal accuracy
@@ -140,6 +151,7 @@ struct DashboardView: View {
     DashboardView(
         locationManager: LocationManager(),
         altimeterManager: AltimeterManager(),
+        motionManager: MotionManager(),
         settings: AppSettings()
     )
 }

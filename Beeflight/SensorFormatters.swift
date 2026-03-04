@@ -18,8 +18,8 @@ enum SensorFormatters {
 
     /// Format climbing speed in m/s with 2 decimal places
     static func formatClimbingSpeed(_ mps: Double) -> String {
-        let sign = mps >= 0 ? "+" : ""
-        return String(format: "%@%.2f", sign, mps)
+        let sign = mps > 0 ? "+" : mps < 0 ? "-" : ""
+        return String(format: "%@%.2f", sign, abs(mps))
     }
 
     /// Format heading/course as degrees with 0 decimal places
@@ -31,6 +31,11 @@ enum SensorFormatters {
     static func formatHeading(_ degrees: Double) -> String {
         let cardinal = cardinalDirection(for: degrees)
         return String(format: "%.0f° %@", degrees, cardinal)
+    }
+
+    /// Format G-force with 2 decimal places
+    static func formatGForce(_ g: Double) -> String {
+        String(format: "%.2f", g)
     }
 
     /// Format pressure in hPa with 1 decimal place
