@@ -33,9 +33,9 @@ enum SensorFormatters {
         return String(format: "%.0f° %@", degrees, cardinal)
     }
 
-    /// Format G-force with 2 decimal places
+    /// Format G-force with 1 decimal place
     static func formatGForce(_ g: Double) -> String {
-        String(format: "%.2f", g)
+        String(format: "%.1f", g)
     }
 
     /// Format pressure in hPa with 1 decimal place
