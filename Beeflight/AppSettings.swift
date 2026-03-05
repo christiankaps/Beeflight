@@ -61,6 +61,13 @@ final class AppSettings {
     private static let appearanceModeKey = "appearanceMode"
     private static let colorThemeKey = "colorTheme"
     private static let unitSystemKey = "unitSystem"
+    private static let autoUpdateRateKey = "autoUpdateRate"
+
+    var autoUpdateRate: Bool {
+        didSet {
+            UserDefaults.standard.set(autoUpdateRate, forKey: Self.autoUpdateRateKey)
+        }
+    }
 
     var updateRate: UpdateRate {
         didSet {
@@ -91,6 +98,12 @@ final class AppSettings {
     }
 
     init() {
+        if UserDefaults.standard.object(forKey: Self.autoUpdateRateKey) != nil {
+            autoUpdateRate = UserDefaults.standard.bool(forKey: Self.autoUpdateRateKey)
+        } else {
+            autoUpdateRate = true
+        }
+
         if let stored = UserDefaults.standard.string(forKey: Self.updateRateKey),
            let rate = UpdateRate(rawValue: stored) {
             updateRate = rate

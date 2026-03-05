@@ -1,4 +1,5 @@
 import SwiftUI
+import Combine
 import CoreLocation
 import CoreMotion
 
@@ -31,14 +32,26 @@ struct ContentView: View {
         .onAppear {
             guard !sensorsStarted else { return }
             sensorsStarted = true
+            UIDevice.current.isBatteryMonitoringEnabled = true
             locationManager.requestAuthorization()
             locationManager.startUpdates()
             altimeterManager.startUpdates()
             motionManager.startUpdates()
+            updateRateForBatteryState()
+        }
+        .onReceive(NotificationCenter.default.publisher(for: UIDevice.batteryStateDidChangeNotification)) { _ in
+            updateRateForBatteryState()
+        }
+        .onReceive(NotificationCenter.default.publisher(for: NSNotification.Name.NSProcessInfoPowerStateDidChange)) { _ in
+            updateRateForBatteryState()
+        }
+        .onChange(of: settings.autoUpdateRate) {
+            updateRateForBatteryState()
         }
         .onChange(of: scenePhase) {
             if scenePhase == .active {
                 checkPermissions()
+                updateRateForBatteryState()
             }
         }
         .alert("permissionAlertTitle", isPresented: $showPermissionAlert) {
@@ -50,6 +63,28 @@ struct ContentView: View {
             Button("permissionDismiss", role: .cancel) {}
         } message: {
             Text(permissionAlertMessage)
+        }
+    }
+
+    private func updateRateForBatteryState() {
+        guard settings.autoUpdateRate else { return }
+
+        let newRate: UpdateRate
+        if ProcessInfo.processInfo.isLowPowerModeEnabled {
+            newRate = .low
+        } else {
+            let batteryState = UIDevice.current.batteryState
+            switch batteryState {
+            case .charging, .full:
+                newRate = .maximum
+            default:
+                newRate = .medium
+            }
+        }
+
+        if settings.updateRate != newRate {
+            settings.updateRate = newRate
+            locationManager.applySettings(settings)
         }
     }
 

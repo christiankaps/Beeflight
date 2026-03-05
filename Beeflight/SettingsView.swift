@@ -7,6 +7,10 @@ struct SettingsView: View {
     var body: some View {
         Form {
             Section {
+                Toggle(isOn: $settings.autoUpdateRate) {
+                    Label("settingsAutoUpdateRate", systemImage: "bolt.batteryblock")
+                }
+
                 Picker(selection: $settings.updateRate) {
                     ForEach(UpdateRate.allCases) { rate in
                         VStack(alignment: .leading) {
@@ -21,6 +25,7 @@ struct SettingsView: View {
                     Label("settingsUpdateRate", systemImage: "gauge.with.dots.needle.33percent")
                 }
                 .pickerStyle(.navigationLink)
+                .disabled(settings.autoUpdateRate)
                 .onChange(of: settings.updateRate) {
                     onRateChanged()
                 }

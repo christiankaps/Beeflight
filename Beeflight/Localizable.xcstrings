@@ -641,6 +641,23 @@
         }
       }
     },
+    "settingsAutoUpdateRate" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Automatische Aktualisierungsrate"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Automatic Update Rate"
+          }
+        }
+      }
+    },
     "settingsUpdateRate" : {
       "extractionState" : "manual",
       "localizations" : {
