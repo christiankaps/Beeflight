@@ -60,7 +60,7 @@ struct DashboardView: View {
                     // Climbing Speed
                     SensorCardView(
                         title: "sensorClimbingSpeed",
-                        value: SensorFormatters.formatClimbingSpeed(locationManager.climbingSpeed),
+                        value: SensorFormatters.formatClimbingSpeed(altimeterManager.climbingSpeed),
                         unit: "unitMps",
                         icon: "arrow.up.arrow.down",
                         themeColors: theme
