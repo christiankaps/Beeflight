@@ -18,6 +18,14 @@ enum AppearanceMode: String, CaseIterable, Identifiable {
     }
 }
 
+enum UnitSystem: String, CaseIterable, Identifiable {
+    case metric = "metric"
+    case imperial = "imperial"
+    case aviation = "aviation"
+
+    var id: String { rawValue }
+}
+
 enum UpdateRate: String, CaseIterable, Identifiable {
     case maximum = "maximum"
     case high = "high"
@@ -52,6 +60,7 @@ final class AppSettings {
     private static let updateRateKey = "updateRate"
     private static let appearanceModeKey = "appearanceMode"
     private static let colorThemeKey = "colorTheme"
+    private static let unitSystemKey = "unitSystem"
 
     var updateRate: UpdateRate {
         didSet {
@@ -68,6 +77,12 @@ final class AppSettings {
     var colorTheme: ColorTheme {
         didSet {
             UserDefaults.standard.set(colorTheme.rawValue, forKey: Self.colorThemeKey)
+        }
+    }
+
+    var unitSystem: UnitSystem {
+        didSet {
+            UserDefaults.standard.set(unitSystem.rawValue, forKey: Self.unitSystemKey)
         }
     }
 
@@ -95,6 +110,13 @@ final class AppSettings {
             colorTheme = theme
         } else {
             colorTheme = .bee
+        }
+
+        if let stored = UserDefaults.standard.string(forKey: Self.unitSystemKey),
+           let unit = UnitSystem(rawValue: stored) {
+            unitSystem = unit
+        } else {
+            unitSystem = .metric
         }
     }
 }

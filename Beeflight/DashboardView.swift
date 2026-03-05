@@ -11,6 +11,35 @@ struct DashboardView: View {
         GridItem(.flexible(), spacing: 12)
     ]
 
+    private var speedUnitKey: LocalizedStringKey {
+        switch settings.unitSystem {
+        case .metric: return "unitKph"
+        case .imperial: return "unitMph"
+        case .aviation: return "unitKnots"
+        }
+    }
+
+    private var altitudeUnitKey: LocalizedStringKey {
+        switch settings.unitSystem {
+        case .metric: return "unitMeters"
+        case .imperial, .aviation: return "unitFeet"
+        }
+    }
+
+    private var climbUnitKey: LocalizedStringKey {
+        switch settings.unitSystem {
+        case .metric: return "unitMps"
+        case .imperial, .aviation: return "unitFtMin"
+        }
+    }
+
+    private var pressureUnitKey: LocalizedStringKey {
+        switch settings.unitSystem {
+        case .metric, .aviation: return "unitHpa"
+        case .imperial: return "unitInHg"
+        }
+    }
+
     var body: some View {
         let theme = settings.themeColors
 
@@ -42,8 +71,8 @@ struct DashboardView: View {
                     // Speed
                     SensorCardView(
                         title: "sensorSpeed",
-                        value: SensorFormatters.formatSpeed(locationManager.speedKph),
-                        unit: "unitKph",
+                        value: SensorFormatters.formatSpeed(locationManager.speedKph, unitSystem: settings.unitSystem),
+                        unit: speedUnitKey,
                         icon: "speedometer",
                         themeColors: theme
                     )
@@ -51,8 +80,8 @@ struct DashboardView: View {
                     // Altitude
                     SensorCardView(
                         title: "sensorAltitude",
-                        value: SensorFormatters.formatAltitude(locationManager.altitude),
-                        unit: "unitMeters",
+                        value: SensorFormatters.formatAltitude(locationManager.altitude, unitSystem: settings.unitSystem),
+                        unit: altitudeUnitKey,
                         icon: "mountain.2",
                         themeColors: theme
                     )
@@ -60,8 +89,8 @@ struct DashboardView: View {
                     // Climbing Speed
                     SensorCardView(
                         title: "sensorClimbingSpeed",
-                        value: SensorFormatters.formatClimbingSpeed(altimeterManager.climbingSpeed),
-                        unit: "unitMps",
+                        value: SensorFormatters.formatClimbingSpeed(altimeterManager.climbingSpeed, unitSystem: settings.unitSystem),
+                        unit: climbUnitKey,
                         icon: "arrow.up.arrow.down",
                         themeColors: theme
                     )
@@ -87,8 +116,8 @@ struct DashboardView: View {
                     // Barometric Pressure
                     SensorCardView(
                         title: "sensorPressure",
-                        value: SensorFormatters.formatPressure(altimeterManager.pressureHpa),
-                        unit: "unitHpa",
+                        value: SensorFormatters.formatPressure(altimeterManager.pressureHpa, unitSystem: settings.unitSystem),
+                        unit: pressureUnitKey,
                         icon: "barometer",
                         themeColors: theme
                     )

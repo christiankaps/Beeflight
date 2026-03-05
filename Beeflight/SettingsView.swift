@@ -9,21 +9,37 @@ struct SettingsView: View {
             Section {
                 Picker(selection: $settings.updateRate) {
                     ForEach(UpdateRate.allCases) { rate in
-                        Text(rate.labelKey)
-                            .tag(rate)
+                        VStack(alignment: .leading) {
+                            Text(rate.labelKey)
+                            Text(rate.descriptionKey)
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
+                        .tag(rate)
                     }
                 } label: {
                     Label("settingsUpdateRate", systemImage: "gauge.with.dots.needle.33percent")
                 }
+                .pickerStyle(.navigationLink)
                 .onChange(of: settings.updateRate) {
                     onRateChanged()
                 }
-
-                Text(settings.updateRate.descriptionKey)
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
             } header: {
                 Text("settingsSectionSensors")
+            }
+
+            Section {
+                Picker(selection: $settings.unitSystem) {
+                    ForEach(UnitSystem.allCases) { unit in
+                        Text(unit.labelKey)
+                            .tag(unit)
+                    }
+                } label: {
+                    Label("settingsUnitSystem", systemImage: "ruler")
+                }
+                .pickerStyle(.navigationLink)
+            } header: {
+                Text("settingsSectionUnits")
             }
 
             Section {
@@ -91,6 +107,16 @@ extension AppearanceMode {
         case .system: return "appearanceSystem"
         case .light: return "appearanceLight"
         case .dark: return "appearanceDark"
+        }
+    }
+}
+
+extension UnitSystem {
+    var labelKey: LocalizedStringKey {
+        switch self {
+        case .metric: return "unitMetric"
+        case .imperial: return "unitImperial"
+        case .aviation: return "unitAviation"
         }
     }
 }
