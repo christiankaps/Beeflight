@@ -132,35 +132,13 @@ struct DashboardView: View {
                     )
 
                     // GPS Signal Quality
-                    VStack(spacing: 8) {
-                        HStack {
-                            Image(systemName: "antenna.radiowaves.left.and.right")
-                                .font(.headline)
-                                .foregroundStyle(theme.cardAccent)
-                            Text("sensorSatellites")
-                                .font(.caption)
-                                .foregroundStyle(theme.cardAccent)
-                        }
-
-                        Text(gpsQualityPercentage)
-                            .font(.title2)
-                            .fontWeight(.semibold)
-                            .fontDesign(.monospaced)
-                            .minimumScaleFactor(0.6)
-                            .lineLimit(1)
-                            .foregroundStyle(theme.valueText)
-
-                        ProgressView(value: gpsQualityProgress)
-                            .tint(theme.cardAccent)
-
-                        Text("unitSatellites")
-                            .font(.caption2)
-                            .foregroundStyle(theme.unitText)
-                    }
-                    .frame(maxWidth: .infinity)
-                    .padding()
-                    .background(theme.cardBackground)
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                    SensorCardView(
+                        title: "sensorSatellites",
+                        value: gpsQualityPercentage,
+                        unit: "unitSatellites",
+                        icon: "antenna.radiowaves.left.and.right",
+                        themeColors: theme
+                    )
                 }
                 .padding()
             }
@@ -183,18 +161,12 @@ struct DashboardView: View {
 
     /// GPS quality as a percentage string
     private var gpsQualityPercentage: String {
-        let pct = Int(gpsQualityProgress * 100)
-        return "\(pct)%"
-    }
-
-    /// GPS quality as a 0–1 progress value
-    private var gpsQualityProgress: Double {
         let accuracy = locationManager.horizontalAccuracy
-        if accuracy < 0 { return 0.0 }
-        if accuracy <= 5 { return 1.0 }
-        if accuracy <= 10 { return 0.75 }
-        if accuracy <= 25 { return 0.5 }
-        return 0.25
+        if accuracy < 0 { return "0%" }
+        if accuracy <= 5 { return "100%" }
+        if accuracy <= 10 { return "75%" }
+        if accuracy <= 25 { return "50%" }
+        return "25%"
     }
 }
 
