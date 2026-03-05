@@ -17,6 +17,9 @@ final class LocationManager: NSObject, CLLocationManagerDelegate {
     var authorizationStatus: CLAuthorizationStatus = .notDetermined
 
     private let locationManager = CLLocationManager()
+    private var smoothedSpeed: Double = 0.0
+    private let speedSmoothingFactor: Double = 0.15
+    private let speedHysteresis: Double = 0.5 // m/s (~1.8 km/h)
 
     override init() {
         super.init()
