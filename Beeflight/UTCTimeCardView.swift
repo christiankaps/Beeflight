@@ -26,6 +26,20 @@ struct UTCTimeCardView: View {
         return f
     }()
 
+    private static var utcOffsetString: String {
+        let tz = TimeZone.current
+        let seconds = tz.secondsFromGMT()
+        let hours = seconds / 3600
+        let minutes = abs(seconds % 3600) / 60
+        let sign = hours >= 0 ? "+" : ""
+        let abbr = tz.abbreviation() ?? ""
+        if minutes == 0 {
+            return "\(abbr) (UTC \(sign)\(hours))"
+        } else {
+            return "\(abbr) (UTC \(sign)\(hours):\(String(format: "%02d", minutes)))"
+        }
+    }
+
     var body: some View {
         TimelineView(.periodic(from: .now, by: 1)) { context in
             let solar = SolarCalculator.sunriseSunset(latitude: latitude, longitude: longitude, date: context.date)
@@ -63,6 +77,10 @@ struct UTCTimeCardView: View {
                     Text(Self.utcDateFormatter.string(from: context.date))
                         .font(.subheadline)
                         .fontDesign(.monospaced)
+                        .foregroundStyle(themeColors.unitText)
+
+                    Text(Self.utcOffsetString)
+                        .font(.caption2)
                         .foregroundStyle(themeColors.unitText)
                 }
                 .frame(maxWidth: .infinity)
