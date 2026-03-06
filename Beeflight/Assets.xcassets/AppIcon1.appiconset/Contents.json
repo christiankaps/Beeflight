@@ -1,7 +1,7 @@
 {
   "images" : [
     {
-      "filename" : "color.png",
+      "filename" : "Copilot_20260306_224756.png",
       "idiom" : "universal",
       "platform" : "ios",
       "size" : "1024x1024"
@@ -25,7 +25,6 @@
           "value" : "tinted"
         }
       ],
-      "filename" : "tinted.png",
       "idiom" : "universal",
       "platform" : "ios",
       "size" : "1024x1024"
