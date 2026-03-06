@@ -96,24 +96,92 @@ struct DashboardView: View {
                     )
 
                     // Heading (Compass)
-                    SensorCardView(
-                        title: "sensorHeading",
-                        value: SensorFormatters.formatHeadingDegrees(locationManager.heading),
-                        unit: "unitDegrees",
-                        icon: "safari",
-                        themeColors: theme,
-                        valueTrailing: SensorFormatters.cardinalDirection(for: locationManager.heading)
-                    )
+                    VStack(spacing: 8) {
+                        HStack {
+                            Image(systemName: "safari")
+                                .font(.headline)
+                                .foregroundStyle(theme.cardAccent)
+                            Text("sensorHeading")
+                                .font(.caption)
+                                .foregroundStyle(theme.cardAccent)
+                        }
+
+                        ZStack {
+                            Text(SensorFormatters.formatHeadingDegrees(locationManager.heading))
+                                .font(.title2)
+                                .fontWeight(.semibold)
+                                .fontDesign(.monospaced)
+                                .minimumScaleFactor(0.6)
+                                .lineLimit(1)
+                                .foregroundStyle(theme.valueText)
+
+                            HStack {
+                                Image(systemName: "location.north.fill")
+                                    .font(.caption)
+                                    .foregroundStyle(theme.cardAccent)
+                                    .rotationEffect(.degrees(-locationManager.heading))
+                                Spacer()
+                                Text(SensorFormatters.cardinalDirection(for: locationManager.heading))
+                                    .font(.caption)
+                                    .fontWeight(.medium)
+                                    .foregroundStyle(theme.cardAccent)
+                            }
+                        }
+
+                        Text("unitDegrees")
+                            .font(.caption2)
+                            .foregroundStyle(theme.unitText)
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(theme.cardBackground)
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
 
                     // Course (Ground Track)
-                    SensorCardView(
-                        title: "sensorCourse",
-                        value: locationManager.course >= 0 ? SensorFormatters.formatHeadingDegrees(locationManager.course) : "--",
-                        unit: "unitDegrees",
-                        icon: "arrow.triangle.turn.up.right.diamond",
-                        themeColors: theme,
-                        valueTrailing: locationManager.course >= 0 ? SensorFormatters.cardinalDirection(for: locationManager.course) : nil
-                    )
+                    VStack(spacing: 8) {
+                        HStack {
+                            Image(systemName: "arrow.triangle.turn.up.right.diamond")
+                                .font(.headline)
+                                .foregroundStyle(theme.cardAccent)
+                            Text("sensorCourse")
+                                .font(.caption)
+                                .foregroundStyle(theme.cardAccent)
+                        }
+
+                        ZStack {
+                            Text(locationManager.course >= 0 ? SensorFormatters.formatHeadingDegrees(locationManager.course) : "--")
+                                .font(.title2)
+                                .fontWeight(.semibold)
+                                .fontDesign(.monospaced)
+                                .minimumScaleFactor(0.6)
+                                .lineLimit(1)
+                                .foregroundStyle(theme.valueText)
+
+                            HStack {
+                                if locationManager.course >= 0 {
+                                    Image(systemName: "location.north.fill")
+                                        .font(.caption)
+                                        .foregroundStyle(theme.cardAccent)
+                                        .rotationEffect(.degrees(locationManager.course))
+                                }
+                                Spacer()
+                                if locationManager.course >= 0 {
+                                    Text(SensorFormatters.cardinalDirection(for: locationManager.course))
+                                        .font(.caption)
+                                        .fontWeight(.medium)
+                                        .foregroundStyle(theme.cardAccent)
+                                }
+                            }
+                        }
+
+                        Text("unitDegrees")
+                            .font(.caption2)
+                            .foregroundStyle(theme.unitText)
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(theme.cardBackground)
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
 
                     // Barometric Pressure
                     SensorCardView(

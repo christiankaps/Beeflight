@@ -15,14 +15,14 @@ struct ThemeColors {
 
 enum ColorTheme: String, CaseIterable, Identifiable {
     case bee = "bee"
-    case ocean = "ocean"
-    case forest = "forest"
     case sunset = "sunset"
-    case berry = "berry"
-    case slate = "slate"
-    case arctic = "arctic"
     case lava = "lava"
+    case berry = "berry"
+    case ocean = "ocean"
+    case arctic = "arctic"
     case mint = "mint"
+    case forest = "forest"
+    case slate = "slate"
 
     var id: String { rawValue }
 
