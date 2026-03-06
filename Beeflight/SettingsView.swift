@@ -86,6 +86,7 @@ struct SettingsView: View {
         .navigationTitle("settingsTitle")
         .tint(settings.themeColors.tint)
         .preferredColorScheme(settings.appearanceMode.colorScheme)
+        .id(settings.colorTheme)
     }
 }
 
