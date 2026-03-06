@@ -61,13 +61,13 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Beeflight"
+            "value" : "Beesense"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Beeflight"
+            "value" : "Beesense"
           }
         }
       }
@@ -163,13 +163,13 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Beeflight benötigt Zugriff auf Standort- und Bewegungssensoren. Bitte aktiviere diese in den Einstellungen."
+            "value" : "Beesense benötigt Zugriff auf Standort- und Bewegungssensoren. Bitte aktiviere diese in den Einstellungen."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Beeflight needs access to location and motion sensors to function. Please enable them in Settings."
+            "value" : "Beesense needs access to location and motion sensors to function. Please enable them in Settings."
           }
         }
       }
