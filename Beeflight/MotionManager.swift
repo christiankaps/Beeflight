@@ -7,11 +7,9 @@ final class MotionManager {
     var gForce: Double = 1.0
 
     private let motionManager = CMMotionManager()
-    /// Smoothing factor for low-pass filter (0–1). Lower = smoother.
-    private let smoothingFactor: Double = 0.05
-    /// Minimum change required to update the published value
-    private let hysteresis: Double = 0.05
     private var smoothed: Double = 1.0
+    private var lastTimestamp: Date?
+    private let timeConstant: Double = 2.0 // seconds for ~63% response
 
     func startUpdates() {
         guard motionManager.isAccelerometerAvailable else { return }
@@ -21,10 +19,16 @@ final class MotionManager {
             guard let self, let data, error == nil else { return }
             let a = data.acceleration
             let raw = sqrt(a.x * a.x + a.y * a.y + a.z * a.z)
-            self.smoothed = self.smoothed + self.smoothingFactor * (raw - self.smoothed)
-            if abs(self.smoothed - self.gForce) >= self.hysteresis {
-                self.gForce = self.smoothed
+            let now = Date()
+            if let lastTime = self.lastTimestamp {
+                let dt = now.timeIntervalSince(lastTime)
+                let alpha = 1.0 - exp(-dt / self.timeConstant)
+                self.smoothed += alpha * (raw - self.smoothed)
+            } else {
+                self.smoothed = raw
             }
+            self.lastTimestamp = now
+            self.gForce = self.smoothed
         }
     }
 

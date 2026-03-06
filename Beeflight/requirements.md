@@ -1,4 +1,4 @@
-# Beeflight - Requirements
+# Beesense - Requirements
 
 ## 1. Functional Requirements
 
@@ -12,7 +12,7 @@
 - FR-1.2.3: The app shall display the current altitude, converted to the selected unit system.
 - FR-1.2.4: The app shall display the climbing speed (vertical rate) derived from barometric pressure changes, converted to the selected unit system.
 - FR-1.2.5: The app shall display the current compass heading (0–359°) with a cardinal direction label (N, NE, E, SE, S, SW, W, NW) and a rotating arrow pointing to north.
-- FR-1.2.6: The app shall display the current ground track course (0–359°) with a cardinal direction label and a rotating arrow pointing in the direction of travel. When not moving, the course shall display "--".
+- FR-1.2.6: The app shall display the current ground track course (0–359°) with a cardinal direction label and a rotating arrow pointing in the direction of travel relative to the phone's heading. When not moving, the course shall display "--".
 - FR-1.2.7: The app shall display the GPS signal quality as a percentage (0%, 25%, 50%, 75%, 100%) based on horizontal accuracy.
 - FR-1.2.8: The app shall display the current barometric pressure, converted to the selected unit system.
 - FR-1.2.9: The app shall display the current G-force with 1 decimal place.
@@ -24,9 +24,10 @@
 - FR-1.3.3: The app shall display the device's current time zone abbreviation and UTC offset (e.g. "CET (UTC +1)").
 
 ### 1.4 Sensor Processing
-- FR-1.4.1: Speed values shall be smoothed using an exponential moving average (factor 0.15) with hysteresis (0.5 m/s) and clamped to a maximum of 500 m/s. Invalid speed values and readings with negative speed accuracy shall be ignored.
-- FR-1.4.2: Climbing speed shall be derived from CMAltimeter relative altitude changes, smoothed with EMA (factor 0.15), hysteresis (0.02 m/s), and clamped to ±50 m/s. A minimum time delta of 0.5s is required between updates.
-- FR-1.4.3: G-force shall be calculated from 3-axis accelerometer data, smoothed with EMA (factor 0.05) and hysteresis (0.05 G) at a 10 Hz update rate.
+- FR-1.4.1: Speed values shall be smoothed using a time-aware exponential moving average (alpha = 1 - exp(-dt/tau), tau = 2s) with hysteresis (0.5 m/s) and clamped to a maximum of 500 m/s. Invalid speed values and readings with negative speed accuracy shall be ignored.
+- FR-1.4.2: Climbing speed shall be derived from CMAltimeter relative altitude changes, smoothed with time-aware EMA (tau = 2s) and clamped to ±50 m/s.
+- FR-1.4.3: G-force shall be calculated from 3-axis accelerometer data, smoothed with time-aware EMA (tau = 2s) at a 10 Hz update rate.
+- FR-1.4.4: Compass arrows shall compensate for the current interface orientation so they remain correct in both portrait and landscape.
 
 ### 1.5 Settings
 - FR-1.5.1: The app shall provide a settings screen accessible from the dashboard toolbar.
@@ -37,8 +38,9 @@
 - FR-1.5.6: The app shall allow the user to choose the appearance mode: System, Light, or Dark.
 - FR-1.5.7: The app shall allow the user to select a color theme from 9 predefined palettes: Bee, Sunset, Lava, Berry, Ocean, Arctic, Mint, Forest, Slate (ordered by color spectrum).
 - FR-1.5.8: Each color theme shall provide adaptive light and dark mode color variants.
-- FR-1.5.9: All settings shall be persisted between app launches using UserDefaults.
-- FR-1.5.10: The theme highlight color in settings shall update immediately when the theme is changed.
+- FR-1.5.9: The app shall allow the user to lock the orientation to portrait mode.
+- FR-1.5.10: All settings shall be persisted between app launches using UserDefaults.
+- FR-1.5.11: The theme highlight color in settings shall update immediately when the theme is changed.
 
 ### 1.6 Permissions
 - FR-1.6.1: The app shall request location permission (When In Use) on first launch.
@@ -56,9 +58,9 @@
 - NFR-2.1.3: Localization shall use String Catalogs (.xcstrings).
 
 ### 2.2 Appearance
-- NFR-2.2.1: The app name shall be "Beeflight".
+- NFR-2.2.1: The app name shall be "Beesense".
 - NFR-2.2.2: The app icon shall depict a bee with light, dark, and tinted variants.
-- NFR-2.2.3: The app shall only support portrait orientation.
+- NFR-2.2.3: The app shall support portrait and landscape orientation, with an optional setting to lock to portrait.
 - NFR-2.2.4: The app shall support light and dark mode, configurable via settings (System, Light, Dark).
 - NFR-2.2.5: The default color theme shall be "Bee" (yellow/black).
 

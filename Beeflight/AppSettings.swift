@@ -62,10 +62,17 @@ final class AppSettings {
     private static let colorThemeKey = "colorTheme"
     private static let unitSystemKey = "unitSystem"
     private static let autoUpdateRateKey = "autoUpdateRate"
+    private static let lockPortraitKey = "lockPortrait"
 
     var autoUpdateRate: Bool {
         didSet {
             UserDefaults.standard.set(autoUpdateRate, forKey: Self.autoUpdateRateKey)
+        }
+    }
+
+    var lockPortrait: Bool {
+        didSet {
+            UserDefaults.standard.set(lockPortrait, forKey: Self.lockPortraitKey)
         }
     }
 
@@ -131,5 +138,7 @@ final class AppSettings {
         } else {
             unitSystem = .metric
         }
+
+        lockPortrait = UserDefaults.standard.bool(forKey: Self.lockPortraitKey)
     }
 }

@@ -582,6 +582,23 @@
         }
       }
     },
+    "settingsLockPortrait" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hochformat sperren"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lock Portrait"
+          }
+        }
+      }
+    },
     "settingsColorTheme" : {
       "extractionState" : "manual",
       "localizations" : {

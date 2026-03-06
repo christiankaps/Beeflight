@@ -48,6 +48,10 @@ struct SettingsView: View {
             }
 
             Section {
+                Toggle(isOn: $settings.lockPortrait) {
+                    Label("settingsLockPortrait", systemImage: "lock.rotation")
+                }
+
                 Picker(selection: $settings.appearanceMode) {
                     ForEach(AppearanceMode.allCases) { mode in
                         Text(mode.labelKey)

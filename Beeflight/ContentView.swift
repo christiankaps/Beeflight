@@ -46,6 +46,12 @@ struct ContentView: View {
         .onChange(of: settings.autoUpdateRate) {
             updateRateForBatteryState()
         }
+        .onChange(of: settings.lockPortrait) {
+            guard let scene = UIApplication.shared.connectedScenes
+                .compactMap({ $0 as? UIWindowScene }).first,
+                  let window = scene.windows.first else { return }
+            window.rootViewController?.setNeedsUpdateOfSupportedInterfaceOrientations()
+        }
         .onChange(of: scenePhase) {
             if scenePhase == .active {
                 checkPermissions()
