@@ -60,6 +60,7 @@ struct SettingsView: View {
                 } label: {
                     Label("settingsAppearance", systemImage: "circle.lefthalf.filled")
                 }
+                .pickerStyle(.navigationLink)
 
                 Picker(selection: $settings.colorTheme) {
                     ForEach(ColorTheme.allCases) { theme in
@@ -82,9 +83,9 @@ struct SettingsView: View {
                 Text("settingsSectionAppearance")
             }
         }
-        .id(settings.colorTheme)
         .navigationTitle("settingsTitle")
         .tint(settings.themeColors.tint)
+        .preferredColorScheme(settings.appearanceMode.colorScheme)
     }
 }
 
