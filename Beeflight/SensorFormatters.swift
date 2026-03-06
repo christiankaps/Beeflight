@@ -50,7 +50,12 @@ enum SensorFormatters {
         String(format: "%.0f°", degrees)
     }
 
-    /// Format compass heading with cardinal direction
+    /// Format compass heading degrees only
+    static func formatHeadingDegrees(_ degrees: Double) -> String {
+        String(format: "%.0f°", degrees)
+    }
+
+    /// Format compass heading with cardinal direction (legacy)
     static func formatHeading(_ degrees: Double) -> String {
         let cardinal = cardinalDirection(for: degrees)
         return String(format: "%.0f° %@", degrees, cardinal)

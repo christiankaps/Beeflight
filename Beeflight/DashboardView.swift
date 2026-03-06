@@ -98,19 +98,21 @@ struct DashboardView: View {
                     // Heading (Compass)
                     SensorCardView(
                         title: "sensorHeading",
-                        value: SensorFormatters.formatHeading(locationManager.heading),
+                        value: SensorFormatters.formatHeadingDegrees(locationManager.heading),
                         unit: "unitDegrees",
                         icon: "safari",
-                        themeColors: theme
+                        themeColors: theme,
+                        valueTrailing: SensorFormatters.cardinalDirection(for: locationManager.heading)
                     )
 
                     // Course (Ground Track)
                     SensorCardView(
                         title: "sensorCourse",
-                        value: locationManager.course >= 0 ? SensorFormatters.formatHeading(locationManager.course) : "--",
+                        value: locationManager.course >= 0 ? SensorFormatters.formatHeadingDegrees(locationManager.course) : "--",
                         unit: "unitDegrees",
                         icon: "arrow.triangle.turn.up.right.diamond",
-                        themeColors: theme
+                        themeColors: theme,
+                        valueTrailing: locationManager.course >= 0 ? SensorFormatters.cardinalDirection(for: locationManager.course) : nil
                     )
 
                     // Barometric Pressure

@@ -6,6 +6,7 @@ struct SensorCardView: View {
     let unit: LocalizedStringKey
     let icon: String
     var themeColors: ThemeColors = ColorTheme.bee.colors
+    var valueTrailing: String? = nil
 
     var body: some View {
         VStack(spacing: 8) {
@@ -18,13 +19,25 @@ struct SensorCardView: View {
                     .foregroundStyle(themeColors.cardAccent)
             }
 
-            Text(value)
-                .font(.title2)
-                .fontWeight(.semibold)
-                .fontDesign(.monospaced)
-                .minimumScaleFactor(0.6)
-                .lineLimit(1)
-                .foregroundStyle(themeColors.valueText)
+            ZStack {
+                Text(value)
+                    .font(.title2)
+                    .fontWeight(.semibold)
+                    .fontDesign(.monospaced)
+                    .minimumScaleFactor(0.6)
+                    .lineLimit(1)
+                    .foregroundStyle(themeColors.valueText)
+
+                if let trailing = valueTrailing {
+                    HStack {
+                        Spacer()
+                        Text(trailing)
+                            .font(.caption)
+                            .fontWeight(.medium)
+                            .foregroundStyle(themeColors.cardAccent)
+                    }
+                }
+            }
 
             Text(unit)
                 .font(.caption2)
