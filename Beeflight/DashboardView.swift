@@ -109,7 +109,7 @@ struct DashboardView: View {
                     CompassCardView(
                         title: "sensorCourse",
                         degrees: locationManager.course,
-                        arrowRotation: locationManager.course,
+                        arrowRotation: locationManager.course - locationManager.heading,
                         icon: "arrow.triangle.turn.up.right.diamond",
                         isValid: locationManager.course >= 0,
                         themeColors: theme
