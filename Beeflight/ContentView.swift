@@ -1,6 +1,4 @@
 import SwiftUI
-import Combine
-import CoreLocation
 import CoreMotion
 
 struct ContentView: View {
@@ -89,19 +87,12 @@ struct ContentView: View {
     }
 
     private func checkPermissions() {
-        var denied: [LocalizedStringKey] = []
+        let locationDenied = locationManager.authorizationStatus == .denied
+            || locationManager.authorizationStatus == .restricted
+        let motionDenied = CMMotionActivityManager.authorizationStatus() == .denied
+            || CMMotionActivityManager.authorizationStatus() == .restricted
 
-        let locationStatus = locationManager.authorizationStatus
-        if locationStatus == .denied || locationStatus == .restricted {
-            denied.append("permissionLocation")
-        }
-
-        let motionStatus = CMMotionActivityManager.authorizationStatus()
-        if motionStatus == .denied || motionStatus == .restricted {
-            denied.append("permissionMotion")
-        }
-
-        if !denied.isEmpty {
+        if locationDenied || motionDenied {
             permissionAlertMessage = "permissionAlertMessage"
             showPermissionAlert = true
         }

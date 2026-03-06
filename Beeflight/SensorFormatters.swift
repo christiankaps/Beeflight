@@ -56,12 +56,6 @@ enum SensorFormatters {
         return "\(normalized)°"
     }
 
-    /// Format compass heading with cardinal direction (legacy)
-    static func formatHeading(_ degrees: Double) -> String {
-        let cardinal = cardinalDirection(for: degrees)
-        return String(format: "%.0f° %@", degrees, cardinal)
-    }
-
     /// Format G-force with 1 decimal place
     static func formatGForce(_ g: Double) -> String {
         String(format: "%.1f", g)
