@@ -74,12 +74,20 @@ final class LocationManager: NSObject, CLLocationManagerDelegate {
 
         latitude = location.coordinate.latitude
         longitude = location.coordinate.longitude
-        speed = location.speed
         course = location.course
         horizontalAccuracy = location.horizontalAccuracy
         verticalAccuracy = location.verticalAccuracy
-
         altitude = location.altitude
+
+        // Smooth speed: ignore invalid values, clamp, apply EMA + hysteresis
+        let rawSpeed = location.speed
+        if rawSpeed >= 0, location.speedAccuracy >= 0 {
+            let clamped = min(rawSpeed, 500.0) // cap at 500 m/s (~1800 km/h)
+            smoothedSpeed += speedSmoothingFactor * (clamped - smoothedSpeed)
+            if abs(smoothedSpeed - speed) >= speedHysteresis {
+                speed = smoothedSpeed
+            }
+        }
     }
 
     func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading) {

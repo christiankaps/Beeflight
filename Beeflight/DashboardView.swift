@@ -44,7 +44,7 @@ struct DashboardView: View {
         let theme = settings.themeColors
 
         NavigationStack {
-            ScrollView {
+            ScrollView(showsIndicators: false) {
                 // UTC Time & Date (full width)
                 UTCTimeCardView(latitude: locationManager.latitude, longitude: locationManager.longitude, themeColors: theme)
                     .padding(.horizontal)
