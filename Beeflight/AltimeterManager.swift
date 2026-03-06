@@ -17,8 +17,7 @@ final class AltimeterManager {
     private var previousRelativeAltitude: Double?
     private var previousTimestamp: Date?
     private var smoothedClimbingSpeed: Double = 0.0
-    private let climbSmoothingFactor: Double = 0.15
-    private let climbHysteresis: Double = 0.02
+    private let climbTimeConstant: Double = 2.0 // seconds for ~63% response
 
     init() {
         isAvailable = CMAltimeter.isRelativeAltitudeAvailable()
@@ -35,17 +34,14 @@ final class AltimeterManager {
             let now = Date()
 
             if let prevAlt = self.previousRelativeAltitude, let prevTime = self.previousTimestamp {
-                let timeDelta = now.timeIntervalSince(prevTime)
-                if timeDelta >= 0.5 {
-                    let raw = (relAlt - prevAlt) / timeDelta
-                    let clamped = max(-50, min(50, raw))
-                    self.smoothedClimbingSpeed += self.climbSmoothingFactor * (clamped - self.smoothedClimbingSpeed)
-                    if abs(self.smoothedClimbingSpeed - self.climbingSpeed) >= self.climbHysteresis {
-                        self.climbingSpeed = self.smoothedClimbingSpeed
-                    }
-                    self.previousRelativeAltitude = relAlt
-                    self.previousTimestamp = now
-                }
+                let dt = now.timeIntervalSince(prevTime)
+                let raw = (relAlt - prevAlt) / dt
+                let clamped = max(-50, min(50, raw))
+                let alpha = 1.0 - exp(-dt / self.climbTimeConstant)
+                self.smoothedClimbingSpeed += alpha * (clamped - self.smoothedClimbingSpeed)
+                self.climbingSpeed = self.smoothedClimbingSpeed
+                self.previousRelativeAltitude = relAlt
+                self.previousTimestamp = now
             } else {
                 self.previousRelativeAltitude = relAlt
                 self.previousTimestamp = now
