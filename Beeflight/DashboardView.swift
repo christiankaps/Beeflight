@@ -1,10 +1,12 @@
 import SwiftUI
+import UIKit
 
 struct DashboardView: View {
     var locationManager: LocationManager
     var altimeterManager: AltimeterManager
     var motionManager: MotionManager
     @Bindable var settings: AppSettings
+    @State private var orientationOffset: Double = 0.0
 
     private let columns = [
         GridItem(.flexible(), spacing: 12),
@@ -99,7 +101,7 @@ struct DashboardView: View {
                     CompassCardView(
                         title: "sensorHeading",
                         degrees: locationManager.heading,
-                        arrowRotation: -locationManager.heading,
+                        arrowRotation: -locationManager.heading + orientationOffset,
                         icon: "safari",
                         isValid: true,
                         themeColors: theme
@@ -109,7 +111,7 @@ struct DashboardView: View {
                     CompassCardView(
                         title: "sensorCourse",
                         degrees: locationManager.course,
-                        arrowRotation: locationManager.course - locationManager.heading,
+                        arrowRotation: locationManager.course - locationManager.heading + orientationOffset,
                         icon: "arrow.triangle.turn.up.right.diamond",
                         isValid: locationManager.course >= 0,
                         themeColors: theme
@@ -159,6 +161,30 @@ struct DashboardView: View {
             }
         }
         .tint(settings.themeColors.tint)
+        .onAppear { updateOrientationOffset() }
+        .onReceive(NotificationCenter.default.publisher(for: UIDevice.orientationDidChangeNotification)) { _ in
+            updateOrientationOffset()
+        }
+    }
+
+    /// Degrees to add to arrow rotations to compensate for interface rotation.
+    /// CoreLocation heading is always relative to the physical top edge (short side),
+    /// but SwiftUI rotationEffect uses the screen coordinate system which rotates with the UI.
+    private func updateOrientationOffset() {
+        guard let scene = UIApplication.shared.connectedScenes
+            .compactMap({ $0 as? UIWindowScene })
+            .first else { return }
+
+        switch scene.interfaceOrientation {
+        case .landscapeLeft:
+            orientationOffset = 90
+        case .landscapeRight:
+            orientationOffset = -90
+        case .portraitUpsideDown:
+            orientationOffset = 180
+        default:
+            orientationOffset = 0
+        }
     }
 
     /// GPS quality as a percentage string
