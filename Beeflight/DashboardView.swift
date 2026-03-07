@@ -47,12 +47,11 @@ struct DashboardView: View {
 
         NavigationStack {
             ScrollView(showsIndicators: false) {
-                // UTC Time & Date (full width)
-                UTCTimeCardView(latitude: locationManager.latitude, longitude: locationManager.longitude, themeColors: theme)
-                    .padding(.horizontal)
-                    .padding(.top)
+                VStack(spacing: 12) {
+                    // UTC Time & Date (full width)
+                    UTCTimeCardView(latitude: locationManager.latitude, longitude: locationManager.longitude, themeColors: theme)
 
-                LazyVGrid(columns: columns, spacing: 12) {
+                    LazyVGrid(columns: columns, spacing: 12) {
                     // GPS Position
                     SensorCardView(
                         title: "sensorLatitude",
@@ -143,6 +142,7 @@ struct DashboardView: View {
                         icon: "antenna.radiowaves.left.and.right",
                         themeColors: theme
                     )
+                    }
                 }
                 .padding()
             }
