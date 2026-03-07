@@ -10,16 +10,12 @@ final class LocationManager: NSObject, CLLocationManagerDelegate {
     var altitude: Double = 0.0 // meters
     var course: Double = 0.0 // degrees
     var heading: Double = 0.0 // magnetic heading degrees
-    var verticalAccuracy: Double = -1.0
     var horizontalAccuracy: Double = -1.0
-
 
     var authorizationStatus: CLAuthorizationStatus = .notDetermined
 
     private let locationManager = CLLocationManager()
-    private var smoothedSpeed: Double = 0.0
-    private var lastSpeedTimestamp: Date?
-    private let speedTimeConstant: Double = 2.0 // seconds for ~63% response
+    private var speedEMA = EMAFilter(timeConstant: 2.0)
     private let speedHysteresis: Double = 0.5 // m/s (~1.8 km/h)
 
     override init() {
@@ -77,24 +73,15 @@ final class LocationManager: NSObject, CLLocationManagerDelegate {
         longitude = location.coordinate.longitude
         course = location.course
         horizontalAccuracy = location.horizontalAccuracy
-        verticalAccuracy = location.verticalAccuracy
         altitude = location.altitude
 
         // Time-aware EMA speed smoothing with hysteresis
         let rawSpeed = location.speed
         if rawSpeed >= 0, location.speedAccuracy >= 0 {
             let clamped = min(rawSpeed, 500.0) // cap at 500 m/s (~1800 km/h)
-            let now = Date()
-            if let lastTime = lastSpeedTimestamp {
-                let dt = now.timeIntervalSince(lastTime)
-                let alpha = 1.0 - exp(-dt / speedTimeConstant)
-                smoothedSpeed += alpha * (clamped - smoothedSpeed)
-            } else {
-                smoothedSpeed = clamped
-            }
-            lastSpeedTimestamp = now
-            if abs(smoothedSpeed - speed) >= speedHysteresis {
-                speed = smoothedSpeed
+            let smoothed = speedEMA.update(raw: clamped)
+            if abs(smoothed - speed) >= speedHysteresis {
+                speed = smoothed
             }
         }
     }

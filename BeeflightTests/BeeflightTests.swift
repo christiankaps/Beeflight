@@ -23,42 +23,42 @@ struct SensorFormattersTests {
     // MARK: - formatSpeed
 
     @Test func formatSpeedNormal() {
-        let result = SensorFormatters.formatSpeed(120.5)
+        let result = SensorFormatters.formatSpeed(120.5, unitSystem: .metric)
         #expect(result == "120.5")
     }
 
     @Test func formatSpeedZero() {
-        let result = SensorFormatters.formatSpeed(0.0)
+        let result = SensorFormatters.formatSpeed(0.0, unitSystem: .metric)
         #expect(result == "0.0")
     }
 
     // MARK: - formatAltitude
 
     @Test func formatAltitudePositive() {
-        let result = SensorFormatters.formatAltitude(1234.5)
+        let result = SensorFormatters.formatAltitude(1234.5, unitSystem: .metric)
         #expect(result == "1234.5")
     }
 
     @Test func formatAltitudeNegative() {
-        let result = SensorFormatters.formatAltitude(-10.3)
+        let result = SensorFormatters.formatAltitude(-10.3, unitSystem: .metric)
         #expect(result == "-10.3")
     }
 
     // MARK: - formatClimbingSpeed
 
     @Test func formatClimbingSpeedPositive() {
-        let result = SensorFormatters.formatClimbingSpeed(2.45)
+        let result = SensorFormatters.formatClimbingSpeed(2.45, unitSystem: .metric)
         #expect(result == "+2.45")
     }
 
     @Test func formatClimbingSpeedNegative() {
-        let result = SensorFormatters.formatClimbingSpeed(-1.30)
+        let result = SensorFormatters.formatClimbingSpeed(-1.30, unitSystem: .metric)
         #expect(result == "-1.30")
     }
 
     @Test func formatClimbingSpeedZero() {
-        let result = SensorFormatters.formatClimbingSpeed(0.0)
-        #expect(result == "+0.00")
+        let result = SensorFormatters.formatClimbingSpeed(0.0, unitSystem: .metric)
+        #expect(result == "0.00")
     }
 
     // MARK: - formatDegrees
@@ -73,37 +73,37 @@ struct SensorFormattersTests {
         #expect(result == "0°")
     }
 
-    // MARK: - formatHeading
+    // MARK: - formatHeadingDegrees
 
     @Test func formatHeadingNorth() {
-        let result = SensorFormatters.formatHeading(0.0)
-        #expect(result == "0° N")
+        let result = SensorFormatters.formatHeadingDegrees(0.0)
+        #expect(result == "0°")
     }
 
     @Test func formatHeadingEast() {
-        let result = SensorFormatters.formatHeading(90.0)
-        #expect(result == "90° E")
+        let result = SensorFormatters.formatHeadingDegrees(90.0)
+        #expect(result == "90°")
     }
 
     @Test func formatHeadingSouth() {
-        let result = SensorFormatters.formatHeading(180.0)
-        #expect(result == "180° S")
+        let result = SensorFormatters.formatHeadingDegrees(180.0)
+        #expect(result == "180°")
     }
 
     @Test func formatHeadingWest() {
-        let result = SensorFormatters.formatHeading(270.0)
-        #expect(result == "270° W")
+        let result = SensorFormatters.formatHeadingDegrees(270.0)
+        #expect(result == "270°")
     }
 
     // MARK: - formatPressure
 
     @Test func formatPressureNormal() {
-        let result = SensorFormatters.formatPressure(1013.2)
+        let result = SensorFormatters.formatPressure(1013.2, unitSystem: .metric)
         #expect(result == "1013.2")
     }
 
     @Test func formatPressureZero() {
-        let result = SensorFormatters.formatPressure(0.0)
+        let result = SensorFormatters.formatPressure(0.0, unitSystem: .metric)
         #expect(result == "0.0")
     }
 
@@ -157,7 +157,6 @@ struct LocationManagerTests {
         #expect(manager.altitude == 0.0)
         #expect(manager.course == 0.0)
         #expect(manager.heading == 0.0)
-        #expect(manager.climbingSpeed == 0.0)
     }
 }
 

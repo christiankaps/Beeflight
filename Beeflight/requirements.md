@@ -26,7 +26,7 @@
 ### 1.4 Sensor Processing
 - FR-1.4.1: Speed values shall be smoothed using a time-aware exponential moving average (alpha = 1 - exp(-dt/tau), tau = 2s) with hysteresis (0.5 m/s) and clamped to a maximum of 500 m/s. Invalid speed values and readings with negative speed accuracy shall be ignored.
 - FR-1.4.2: Climbing speed shall be derived from CMAltimeter relative altitude changes, smoothed with time-aware EMA (tau = 2s) and clamped to ±50 m/s.
-- FR-1.4.3: G-force shall be calculated from 3-axis accelerometer data, smoothed with time-aware EMA (tau = 2s) at a 10 Hz update rate.
+- FR-1.4.3: G-force shall be calculated from 3-axis accelerometer data, smoothed with time-aware EMA (tau = 1s) at a 10 Hz update rate.
 - FR-1.4.4: Compass arrows shall compensate for the current interface orientation so they remain correct in both portrait and landscape.
 
 ### 1.5 Settings
@@ -41,6 +41,7 @@
 - FR-1.5.9: The app shall allow the user to lock the orientation to portrait mode.
 - FR-1.5.10: All settings shall be persisted between app launches using UserDefaults.
 - FR-1.5.11: The theme highlight color in settings shall update immediately when the theme is changed.
+- FR-1.5.12: The user shall be able to cycle through color themes by pulling down on the dashboard scroll view past the rubber-band threshold.
 
 ### 1.6 Permissions
 - FR-1.6.1: The app shall request location permission (When In Use) on first launch.
@@ -72,3 +73,6 @@
 ### 2.4 Performance
 - NFR-2.4.1: Release builds shall use GCC optimization level 3 and Swift whole module optimization.
 - NFR-2.4.2: Battery monitoring shall be enabled to support automatic update rate adjustment.
+- NFR-2.4.3: Sunrise/sunset calculations shall be cached and only recomputed when the UTC day changes.
+- NFR-2.4.4: Theme colors shall be cached on the settings object and updated only when the theme changes.
+- NFR-2.4.5: Sensor updates shall be stopped when the app enters the background and resumed when it becomes active.

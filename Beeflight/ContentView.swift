@@ -2,7 +2,7 @@ import SwiftUI
 import CoreMotion
 
 struct ContentView: View {
-    @State private var settings = AppSettings()
+    @State private var settings: AppSettings
     @State private var locationManager: LocationManager
     @State private var altimeterManager = AltimeterManager()
     @State private var motionManager = MotionManager()
@@ -53,9 +53,19 @@ struct ContentView: View {
             window.rootViewController?.setNeedsUpdateOfSupportedInterfaceOrientations()
         }
         .onChange(of: scenePhase) {
-            if scenePhase == .active {
+            switch scenePhase {
+            case .active:
                 checkPermissions()
                 updateRateForBatteryState()
+                locationManager.startUpdates()
+                altimeterManager.startUpdates()
+                motionManager.startUpdates()
+            case .background:
+                locationManager.stopUpdates()
+                altimeterManager.stopUpdates()
+                motionManager.stopUpdates()
+            default:
+                break
             }
         }
         .alert("permissionAlertTitle", isPresented: $showPermissionAlert) {
