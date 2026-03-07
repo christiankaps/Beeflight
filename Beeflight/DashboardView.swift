@@ -7,6 +7,8 @@ struct DashboardView: View {
     var motionManager: MotionManager
     @Bindable var settings: AppSettings
     @State private var orientationOffset: Double = 0.0
+    @State private var hasTriggeredThemeSwitch = false
+    @State private var pullOverscroll: CGFloat = 0
 
     private let columns = [
         GridItem(.flexible(), spacing: 12),
@@ -145,6 +147,30 @@ struct DashboardView: View {
                     }
                 }
                 .padding()
+            }
+            .overlay(alignment: .top) {
+                Image(systemName: hasTriggeredThemeSwitch ? "checkmark.circle.fill" : "paintpalette.fill")
+                    .font(.title3)
+                    .foregroundStyle(theme.tint)
+                    .opacity(pullOverscroll > 20 ? min(1, Double(pullOverscroll - 20) / 60) : 0)
+                    .offset(y: max(0, pullOverscroll - 40))
+                    .allowsHitTesting(false)
+            }
+            .onScrollGeometryChange(for: CGFloat.self) { geo in
+                -(geo.contentOffset.y + geo.contentInsets.top)
+            } action: { _, overscroll in
+                pullOverscroll = max(0, overscroll)
+                let threshold: CGFloat = 80
+                if overscroll > threshold && !hasTriggeredThemeSwitch {
+                    hasTriggeredThemeSwitch = true
+                    UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+                    withAnimation(.easeInOut(duration: 0.3)) {
+                        settings.colorTheme = settings.colorTheme.next
+                    }
+                }
+                if overscroll < 10 && hasTriggeredThemeSwitch {
+                    hasTriggeredThemeSwitch = false
+                }
             }
             .navigationTitle("dashboardTitle")
             .navigationBarTitleDisplayMode(.inline)

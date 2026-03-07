@@ -244,6 +244,14 @@ enum ColorTheme: String, CaseIterable, Identifiable {
         return [c.tint, c.cardAccent, c.cardBackground]
     }
 
+    /// Returns the next theme in the cycle, wrapping to the first after the last.
+    var next: ColorTheme {
+        let all = ColorTheme.allCases
+        let idx = all.firstIndex(of: self)!
+        let nextIdx = all.index(after: idx)
+        return nextIdx == all.endIndex ? all.first! : all[nextIdx]
+    }
+
     // MARK: - Helper
 
     /// Creates a SwiftUI Color that adapts between light and dark modes
