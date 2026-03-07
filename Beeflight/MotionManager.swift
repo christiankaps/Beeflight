@@ -9,7 +9,7 @@ final class MotionManager {
     private let motionManager = CMMotionManager()
     private var smoothed: Double = 1.0
     private var lastTimestamp: Date?
-    private let timeConstant: Double = 2.0 // seconds for ~63% response
+    private let timeConstant: Double = 1.0 // seconds for ~63% response
 
     func startUpdates() {
         guard motionManager.isAccelerometerAvailable else { return }
