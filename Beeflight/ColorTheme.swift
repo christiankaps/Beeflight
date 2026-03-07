@@ -31,23 +31,23 @@ enum ColorTheme: String, CaseIterable, Identifiable {
         case .bee:
             return ThemeColors(
                 cardBackground: adaptive(
-                    light: UIColor(red: 1.0, green: 0.96, blue: 0.82, alpha: 1),
+                    light: UIColor(red: 1.0, green: 0.94, blue: 0.72, alpha: 1),
                     dark: UIColor(red: 0.18, green: 0.15, blue: 0.08, alpha: 1)
                 ),
                 cardAccent: adaptive(
-                    light: UIColor(red: 0.55, green: 0.45, blue: 0.05, alpha: 1),
+                    light: UIColor(red: 0.72, green: 0.45, blue: 0.0, alpha: 1),
                     dark: UIColor(red: 0.95, green: 0.80, blue: 0.20, alpha: 1)
                 ),
                 valueText: adaptive(
-                    light: UIColor(red: 0.12, green: 0.10, blue: 0.05, alpha: 1),
+                    light: UIColor(red: 0.20, green: 0.12, blue: 0.0, alpha: 1),
                     dark: UIColor(red: 1.0, green: 0.95, blue: 0.75, alpha: 1)
                 ),
                 unitText: adaptive(
-                    light: UIColor(red: 0.50, green: 0.42, blue: 0.20, alpha: 1),
+                    light: UIColor(red: 0.60, green: 0.42, blue: 0.10, alpha: 1),
                     dark: UIColor(red: 0.70, green: 0.62, blue: 0.35, alpha: 1)
                 ),
                 tint: adaptive(
-                    light: UIColor(red: 0.85, green: 0.65, blue: 0.0, alpha: 1),
+                    light: UIColor(red: 0.92, green: 0.62, blue: 0.0, alpha: 1),
                     dark: UIColor(red: 1.0, green: 0.80, blue: 0.0, alpha: 1)
                 )
             )
