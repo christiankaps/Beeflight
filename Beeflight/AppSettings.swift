@@ -91,6 +91,7 @@ final class AppSettings {
     var colorTheme: ColorTheme {
         didSet {
             UserDefaults.standard.set(colorTheme.rawValue, forKey: Self.colorThemeKey)
+            themeColors = colorTheme.colors
         }
     }
 
@@ -100,9 +101,7 @@ final class AppSettings {
         }
     }
 
-    var themeColors: ThemeColors {
-        colorTheme.colors
-    }
+    private(set) var themeColors: ThemeColors
 
     init() {
         if UserDefaults.standard.object(forKey: Self.autoUpdateRateKey) != nil {
@@ -125,12 +124,15 @@ final class AppSettings {
             appearanceMode = .system
         }
 
+        let resolvedTheme: ColorTheme
         if let stored = UserDefaults.standard.string(forKey: Self.colorThemeKey),
            let theme = ColorTheme(rawValue: stored) {
-            colorTheme = theme
+            resolvedTheme = theme
         } else {
-            colorTheme = .bee
+            resolvedTheme = .bee
         }
+        colorTheme = resolvedTheme
+        themeColors = resolvedTheme.colors
 
         if let stored = UserDefaults.standard.string(forKey: Self.unitSystemKey),
            let unit = UnitSystem(rawValue: stored) {

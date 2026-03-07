@@ -5,6 +5,10 @@ struct UTCTimeCardView: View {
     var longitude: Double
     var themeColors: ThemeColors = ColorTheme.bee.colors
 
+    @State private var cachedDayOfYear: Int = -1
+    @State private var sunriseString: String = "--:--"
+    @State private var sunsetString: String = "--:--"
+
     private static let utcTimeFormatter: DateFormatter = {
         let f = DateFormatter()
         f.dateFormat = "HH:mm:ss"
@@ -40,9 +44,24 @@ struct UTCTimeCardView: View {
         }
     }
 
+    private static var utcCalendar: Calendar = {
+        var cal = Calendar(identifier: .gregorian)
+        cal.timeZone = TimeZone(identifier: "UTC")!
+        return cal
+    }()
+
+    private func updateSolarIfNeeded(for date: Date) {
+        let day = Self.utcCalendar.ordinality(of: .day, in: .year, for: date) ?? -1
+        guard day != cachedDayOfYear else { return }
+        cachedDayOfYear = day
+        let solar = SolarCalculator.sunriseSunset(latitude: latitude, longitude: longitude, date: date)
+        sunriseString = solar.sunrise.map { Self.sunTimeFormatter.string(from: $0) } ?? "--:--"
+        sunsetString = solar.sunset.map { Self.sunTimeFormatter.string(from: $0) } ?? "--:--"
+    }
+
     var body: some View {
         TimelineView(.periodic(from: .now, by: 1)) { context in
-            let solar = SolarCalculator.sunriseSunset(latitude: latitude, longitude: longitude, date: context.date)
+            let now = context.date
 
             HStack {
                 // Sunrise (left)
@@ -50,7 +69,7 @@ struct UTCTimeCardView: View {
                     Image(systemName: "sunrise.fill")
                         .font(.caption)
                         .foregroundStyle(themeColors.cardAccent)
-                    Text(solar.sunrise.map { Self.sunTimeFormatter.string(from: $0) } ?? "--:--")
+                    Text(sunriseString)
                         .font(.caption)
                         .fontDesign(.monospaced)
                         .foregroundStyle(themeColors.unitText)
@@ -68,13 +87,13 @@ struct UTCTimeCardView: View {
                             .foregroundStyle(themeColors.cardAccent)
                     }
 
-                    Text(Self.utcTimeFormatter.string(from: context.date))
+                    Text(Self.utcTimeFormatter.string(from: now))
                         .font(.title)
                         .fontWeight(.semibold)
                         .fontDesign(.monospaced)
                         .foregroundStyle(themeColors.valueText)
 
-                    Text(Self.utcDateFormatter.string(from: context.date))
+                    Text(Self.utcDateFormatter.string(from: now))
                         .font(.subheadline)
                         .fontDesign(.monospaced)
                         .foregroundStyle(themeColors.unitText)
@@ -90,7 +109,7 @@ struct UTCTimeCardView: View {
                     Image(systemName: "sunset.fill")
                         .font(.caption)
                         .foregroundStyle(themeColors.cardAccent)
-                    Text(solar.sunset.map { Self.sunTimeFormatter.string(from: $0) } ?? "--:--")
+                    Text(sunsetString)
                         .font(.caption)
                         .fontDesign(.monospaced)
                         .foregroundStyle(themeColors.unitText)
@@ -101,6 +120,8 @@ struct UTCTimeCardView: View {
             .padding()
             .background(themeColors.cardBackground)
             .clipShape(RoundedRectangle(cornerRadius: 12))
+            .onChange(of: now) { updateSolarIfNeeded(for: now) }
+            .onAppear { updateSolarIfNeeded(for: now) }
         }
     }
 }
