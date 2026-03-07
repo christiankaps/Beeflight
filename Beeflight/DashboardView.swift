@@ -54,96 +54,96 @@ struct DashboardView: View {
                     UTCTimeCardView(latitude: locationManager.latitude, longitude: locationManager.longitude, themeColors: theme)
 
                     LazyVGrid(columns: columns, spacing: 12) {
-                    // GPS Position
-                    SensorCardView(
-                        title: "sensorLatitude",
-                        value: SensorFormatters.formatCoordinate(locationManager.latitude),
-                        unit: "unitDegrees",
-                        icon: "location",
-                        themeColors: theme
-                    )
+                        // GPS Position
+                        SensorCardView(
+                            title: "sensorLatitude",
+                            value: SensorFormatters.formatCoordinate(locationManager.latitude),
+                            unit: "unitDegrees",
+                            icon: "location",
+                            themeColors: theme
+                        )
 
-                    SensorCardView(
-                        title: "sensorLongitude",
-                        value: SensorFormatters.formatCoordinate(locationManager.longitude),
-                        unit: "unitDegrees",
-                        icon: "location",
-                        themeColors: theme
-                    )
+                        SensorCardView(
+                            title: "sensorLongitude",
+                            value: SensorFormatters.formatCoordinate(locationManager.longitude),
+                            unit: "unitDegrees",
+                            icon: "location",
+                            themeColors: theme
+                        )
 
-                    // Speed
-                    SensorCardView(
-                        title: "sensorSpeed",
-                        value: SensorFormatters.formatSpeed(locationManager.speedKph, unitSystem: settings.unitSystem),
-                        unit: speedUnitKey,
-                        icon: "speedometer",
-                        themeColors: theme
-                    )
+                        // Altitude
+                        SensorCardView(
+                            title: "sensorAltitude",
+                            value: SensorFormatters.formatAltitude(locationManager.altitude, unitSystem: settings.unitSystem),
+                            unit: altitudeUnitKey,
+                            icon: "mountain.2",
+                            themeColors: theme
+                        )
 
-                    // Altitude
-                    SensorCardView(
-                        title: "sensorAltitude",
-                        value: SensorFormatters.formatAltitude(locationManager.altitude, unitSystem: settings.unitSystem),
-                        unit: altitudeUnitKey,
-                        icon: "mountain.2",
-                        themeColors: theme
-                    )
+                        // Barometric Pressure
+                        SensorCardView(
+                            title: "sensorPressure",
+                            value: SensorFormatters.formatPressure(altimeterManager.pressureHpa, unitSystem: settings.unitSystem),
+                            unit: pressureUnitKey,
+                            icon: "barometer",
+                            themeColors: theme
+                        )
 
-                    // Climbing Speed
-                    SensorCardView(
-                        title: "sensorClimbingSpeed",
-                        value: SensorFormatters.formatClimbingSpeed(altimeterManager.climbingSpeed, unitSystem: settings.unitSystem),
-                        unit: climbUnitKey,
-                        icon: "arrow.up.arrow.down",
-                        themeColors: theme
-                    )
+                        // Speed
+                        SensorCardView(
+                            title: "sensorSpeed",
+                            value: SensorFormatters.formatSpeed(locationManager.speedKph, unitSystem: settings.unitSystem),
+                            unit: speedUnitKey,
+                            icon: "speedometer",
+                            themeColors: theme
+                        )
 
-                    // Heading (Compass)
-                    CompassCardView(
-                        title: "sensorHeading",
-                        degrees: locationManager.heading,
-                        arrowRotation: -locationManager.heading + orientationOffset,
-                        icon: "safari",
-                        isValid: true,
-                        themeColors: theme
-                    )
+                        // Climbing Speed
+                        SensorCardView(
+                            title: "sensorClimbingSpeed",
+                            value: SensorFormatters.formatClimbingSpeed(altimeterManager.climbingSpeed, unitSystem: settings.unitSystem),
+                            unit: climbUnitKey,
+                            icon: "arrow.up.arrow.down",
+                            themeColors: theme
+                        )
 
-                    // Course (Ground Track)
-                    CompassCardView(
-                        title: "sensorCourse",
-                        degrees: locationManager.course,
-                        arrowRotation: locationManager.course - locationManager.heading + orientationOffset,
-                        icon: "arrow.triangle.turn.up.right.diamond",
-                        isValid: locationManager.course >= 0,
-                        themeColors: theme
-                    )
+                        // Heading (Compass)
+                        CompassCardView(
+                            title: "sensorHeading",
+                            degrees: locationManager.heading,
+                            arrowRotation: -locationManager.heading + orientationOffset,
+                            icon: "safari",
+                            isValid: true,
+                            themeColors: theme
+                        )
 
-                    // Barometric Pressure
-                    SensorCardView(
-                        title: "sensorPressure",
-                        value: SensorFormatters.formatPressure(altimeterManager.pressureHpa, unitSystem: settings.unitSystem),
-                        unit: pressureUnitKey,
-                        icon: "barometer",
-                        themeColors: theme
-                    )
+                        // Course (Ground Track)
+                        CompassCardView(
+                            title: "sensorCourse",
+                            degrees: locationManager.course,
+                            arrowRotation: locationManager.course - locationManager.heading + orientationOffset,
+                            icon: "arrow.triangle.turn.up.right.diamond",
+                            isValid: locationManager.course >= 0,
+                            themeColors: theme
+                        )
 
-                    // G-Force
-                    SensorCardView(
-                        title: "sensorGForce",
-                        value: SensorFormatters.formatGForce(motionManager.gForce),
-                        unit: "unitG",
-                        icon: "gauge.with.dots.needle.33percent",
-                        themeColors: theme
-                    )
+                        // G-Force
+                        SensorCardView(
+                            title: "sensorGForce",
+                            value: SensorFormatters.formatGForce(motionManager.gForce),
+                            unit: "unitG",
+                            icon: "gauge.with.dots.needle.33percent",
+                            themeColors: theme
+                        )
 
-                    // GPS Signal Quality
-                    SensorCardView(
-                        title: "sensorSatellites",
-                        value: gpsQualityPercentage,
-                        unit: "unitSatellites",
-                        icon: "antenna.radiowaves.left.and.right",
-                        themeColors: theme
-                    )
+                        // GPS Signal Quality
+                        SensorCardView(
+                            title: "sensorSatellites",
+                            value: gpsQualityPercentage,
+                            unit: "unitSatellites",
+                            icon: "antenna.radiowaves.left.and.right",
+                            themeColors: theme
+                        )
                     }
                 }
                 .padding()
