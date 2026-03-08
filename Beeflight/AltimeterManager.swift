@@ -38,7 +38,8 @@ final class AltimeterManager {
                 let dt = now.timeIntervalSince(prevTime)
                 let raw = (relAlt - prevAlt) / dt
                 let clamped = max(-50, min(50, raw))
-                self.climbingSpeed = self.climbEMA.update(raw: clamped, at: now)
+                let smoothed = self.climbEMA.update(raw: clamped, at: now)
+                self.climbingSpeed = abs(smoothed) < 0.05 ? 0.0 : smoothed
             }
             self.previousRelativeAltitude = relAlt
             self.previousTimestamp = now
