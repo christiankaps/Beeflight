@@ -480,6 +480,23 @@
         }
       }
     },
+    "sensorPosition" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Position"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Position"
+          }
+        }
+      }
+    },
     "sensorPressure" : {
       "extractionState" : "manual",
       "localizations" : {

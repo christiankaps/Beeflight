@@ -53,24 +53,10 @@ struct DashboardView: View {
                     // UTC Time & Date (full width)
                     UTCTimeCardView(latitude: locationManager.latitude, longitude: locationManager.longitude, themeColors: theme)
 
+                    // GPS Position (full width)
+                    PositionCardView(latitude: locationManager.latitude, longitude: locationManager.longitude, themeColors: theme)
+
                     LazyVGrid(columns: columns, spacing: 12) {
-                        // GPS Position
-                        SensorCardView(
-                            title: "sensorLatitude",
-                            value: SensorFormatters.formatCoordinate(locationManager.latitude),
-                            unit: "unitDegrees",
-                            icon: "location",
-                            themeColors: theme
-                        )
-
-                        SensorCardView(
-                            title: "sensorLongitude",
-                            value: SensorFormatters.formatCoordinate(locationManager.longitude),
-                            unit: "unitDegrees",
-                            icon: "location",
-                            themeColors: theme
-                        )
-
                         // Altitude
                         SensorCardView(
                             title: "sensorAltitude",

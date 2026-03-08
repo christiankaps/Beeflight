@@ -94,6 +94,60 @@ struct CompassCardView: View {
     }
 }
 
+/// Full-width card showing latitude and longitude side by side.
+struct PositionCardView: View {
+    let latitude: Double
+    let longitude: Double
+    var themeColors: ThemeColors = ColorTheme.bee.colors
+
+    var body: some View {
+        VStack(spacing: 8) {
+            HStack {
+                Image(systemName: "location")
+                    .font(.headline)
+                    .foregroundStyle(themeColors.cardAccent)
+                Text("sensorPosition")
+                    .font(.caption)
+                    .foregroundStyle(themeColors.cardAccent)
+            }
+
+            HStack(spacing: 0) {
+                VStack(spacing: 4) {
+                    Text(SensorFormatters.formatCoordinate(latitude))
+                        .font(.title2)
+                        .fontWeight(.semibold)
+                        .fontDesign(.monospaced)
+                        .minimumScaleFactor(0.6)
+                        .lineLimit(1)
+                        .foregroundStyle(themeColors.valueText)
+                    Text("sensorLatitude")
+                        .font(.caption2)
+                        .foregroundStyle(themeColors.unitText)
+                }
+                .frame(maxWidth: .infinity)
+
+                VStack(spacing: 4) {
+                    Text(SensorFormatters.formatCoordinate(longitude))
+                        .font(.title2)
+                        .fontWeight(.semibold)
+                        .fontDesign(.monospaced)
+                        .minimumScaleFactor(0.6)
+                        .lineLimit(1)
+                        .foregroundStyle(themeColors.valueText)
+                    Text("sensorLongitude")
+                        .font(.caption2)
+                        .foregroundStyle(themeColors.unitText)
+                }
+                .frame(maxWidth: .infinity)
+            }
+        }
+        .frame(maxWidth: .infinity)
+        .padding()
+        .background(themeColors.cardBackground)
+        .clipShape(RoundedRectangle(cornerRadius: 12))
+    }
+}
+
 #Preview {
     SensorCardView(
         title: "Speed",
