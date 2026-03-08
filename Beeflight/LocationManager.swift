@@ -1,6 +1,7 @@
 import Foundation
 import CoreLocation
 import Observation
+import os
 
 @Observable
 final class LocationManager: NSObject, CLLocationManagerDelegate {
@@ -8,7 +9,7 @@ final class LocationManager: NSObject, CLLocationManagerDelegate {
     var longitude: Double = 0.0
     var speed: Double = 0.0 // m/s from CLLocation
     var altitude: Double = 0.0 // meters
-    var course: Double = 0.0 // degrees
+    var course: Double = -1.0 // degrees, -1 means invalid
     var heading: Double = 0.0 // magnetic heading degrees
     var horizontalAccuracy: Double = -1.0
 
@@ -96,7 +97,9 @@ final class LocationManager: NSObject, CLLocationManagerDelegate {
         }
     }
 
+    private static let logger = Logger(subsystem: Bundle.main.bundleIdentifier ?? "Beeflight", category: "LocationManager")
+
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-        // Location errors are expected when GPS is unavailable (e.g. indoors)
+        Self.logger.warning("Location update failed: \(error.localizedDescription)")
     }
 }

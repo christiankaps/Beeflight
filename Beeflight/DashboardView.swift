@@ -69,7 +69,7 @@ struct DashboardView: View {
                         // Barometric Pressure
                         SensorCardView(
                             title: "sensorPressure",
-                            value: SensorFormatters.formatPressure(altimeterManager.pressureHpa, unitSystem: settings.unitSystem),
+                            value: altimeterManager.isAvailable ? SensorFormatters.formatPressure(altimeterManager.pressureHpa, unitSystem: settings.unitSystem) : "--",
                             unit: pressureUnitKey,
                             icon: "barometer",
                             themeColors: theme
@@ -87,7 +87,7 @@ struct DashboardView: View {
                         // Climbing Speed
                         SensorCardView(
                             title: "sensorClimbingSpeed",
-                            value: SensorFormatters.formatClimbingSpeed(altimeterManager.climbingSpeed, unitSystem: settings.unitSystem),
+                            value: altimeterManager.isAvailable ? SensorFormatters.formatClimbingSpeed(altimeterManager.climbingSpeed, unitSystem: settings.unitSystem) : "--",
                             unit: climbUnitKey,
                             icon: "arrow.up.arrow.down",
                             themeColors: theme
@@ -104,12 +104,13 @@ struct DashboardView: View {
                         )
 
                         // Course (Ground Track)
+                        let courseValid = locationManager.course >= 0
                         CompassCardView(
                             title: "sensorCourse",
                             degrees: locationManager.course,
-                            arrowRotation: locationManager.course - locationManager.heading + orientationOffset,
+                            arrowRotation: courseValid ? locationManager.course - locationManager.heading + orientationOffset : 0,
                             icon: "arrow.triangle.turn.up.right.diamond",
-                            isValid: locationManager.course >= 0,
+                            isValid: courseValid,
                             themeColors: theme
                         )
 

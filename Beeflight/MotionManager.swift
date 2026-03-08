@@ -1,9 +1,12 @@
 import Foundation
 import CoreMotion
 import Observation
+import os
 
 @Observable
 final class MotionManager {
+    private static let logger = Logger(subsystem: Bundle.main.bundleIdentifier ?? "Beeflight", category: "MotionManager")
+
     var gForce: Double = 1.0
 
     private let motionManager = CMMotionManager()
@@ -15,7 +18,11 @@ final class MotionManager {
 
         motionManager.accelerometerUpdateInterval = 1.0 / 10.0
         motionManager.startAccelerometerUpdates(to: .main) { [weak self] data, error in
-            guard let self, let data, error == nil else { return }
+            if let error {
+                Self.logger.warning("Accelerometer update failed: \(error.localizedDescription)")
+                return
+            }
+            guard let self, let data else { return }
             let a = data.acceleration
             let raw = sqrt(a.x * a.x + a.y * a.y + a.z * a.z)
             self.gForce = self.emaFilter.update(raw: raw)

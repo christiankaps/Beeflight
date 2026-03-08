@@ -6,7 +6,7 @@ import Observation
 final class AltimeterManager {
     var pressure: Double = 0.0 // kilopascals from CMAltimeter
     var climbingSpeed: Double = 0.0 // m/s from barometric altitude
-    private var isAvailable: Bool = false
+    private(set) var isAvailable: Bool = false
 
     /// Pressure in hectopascals (hPa), which equals millibars
     var pressureHpa: Double {
@@ -36,6 +36,7 @@ final class AltimeterManager {
 
             if let prevAlt = self.previousRelativeAltitude, let prevTime = self.previousTimestamp {
                 let dt = now.timeIntervalSince(prevTime)
+                guard dt > 0.01 else { return }
                 let raw = (relAlt - prevAlt) / dt
                 let clamped = max(-50, min(50, raw))
                 let smoothed = self.climbEMA.update(raw: clamped, at: now)

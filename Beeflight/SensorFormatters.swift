@@ -3,12 +3,14 @@ import Foundation
 enum SensorFormatters {
     /// Format latitude as degrees with a N/S suffix
     static func formatLatitude(_ value: Double) -> String {
+        guard value.isFinite else { return "--" }
         let suffix = value >= 0 ? "N" : "S"
         return String(format: "%.6f°%@", abs(value), suffix)
     }
 
     /// Format longitude as degrees with an E/W suffix
     static func formatLongitude(_ value: Double) -> String {
+        guard value.isFinite else { return "--" }
         let suffix = value >= 0 ? "E" : "W"
         return String(format: "%.6f°%@", abs(value), suffix)
     }
@@ -59,7 +61,9 @@ enum SensorFormatters {
 
     /// Format compass heading degrees only (normalized to 0–359)
     static func formatHeadingDegrees(_ degrees: Double) -> String {
-        let normalized = Int(degrees.rounded()) % 360
+        guard degrees.isFinite else { return "--" }
+        var normalized = Int(degrees.rounded()) % 360
+        if normalized < 0 { normalized += 360 }
         return "\(normalized)°"
     }
 
@@ -80,6 +84,7 @@ enum SensorFormatters {
 
     /// Convert degrees to cardinal direction string
     static func cardinalDirection(for degrees: Double) -> String {
+        guard degrees.isFinite else { return "--" }
         let normalized = degrees.truncatingRemainder(dividingBy: 360)
         let adjusted = normalized < 0 ? normalized + 360 : normalized
         let directions = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"]

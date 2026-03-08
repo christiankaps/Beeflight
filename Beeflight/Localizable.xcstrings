@@ -72,91 +72,6 @@
         }
       }
     },
-    "gpsExcellent" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ausgezeichnet"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Excellent"
-          }
-        }
-      }
-    },
-    "gpsFair" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Mäßig"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Fair"
-          }
-        }
-      }
-    },
-    "gpsGood" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Gut"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Good"
-          }
-        }
-      }
-    },
-    "gpsNoSignal" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kein Signal"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "No Signal"
-          }
-        }
-      }
-    },
-    "gpsPoor" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Schwach"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Poor"
-          }
-        }
-      }
-    },
     "permissionAlertMessage" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -735,23 +650,6 @@
         }
       }
     },
-    "themeArctic" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Arktis"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Arctic"
-          }
-        }
-      }
-    },
     "themeBee" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -765,23 +663,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Bee"
-          }
-        }
-      }
-    },
-    "themeBerry" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Beere"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Berry"
           }
         }
       }
@@ -820,23 +701,6 @@
         }
       }
     },
-    "themeMint" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Minze"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Mint"
-          }
-        }
-      }
-    },
     "themeOcean" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -867,23 +731,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Slate"
-          }
-        }
-      }
-    },
-    "themeSunset" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sonnenuntergang"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sunset"
           }
         }
       }

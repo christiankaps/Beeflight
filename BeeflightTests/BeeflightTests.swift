@@ -142,6 +142,33 @@ struct SensorFormattersTests {
         #expect(SensorFormatters.cardinalDirection(for: 360) == "N")
         #expect(SensorFormatters.cardinalDirection(for: 450) == "E")
     }
+
+    @Test func cardinalDirectionNaN() {
+        #expect(SensorFormatters.cardinalDirection(for: .nan) == "--")
+        #expect(SensorFormatters.cardinalDirection(for: .infinity) == "--")
+    }
+
+    // MARK: - NaN / Infinity guards
+
+    @Test func formatLatitudeNaN() {
+        #expect(SensorFormatters.formatLatitude(.nan) == "--")
+        #expect(SensorFormatters.formatLatitude(.infinity) == "--")
+    }
+
+    @Test func formatLongitudeNaN() {
+        #expect(SensorFormatters.formatLongitude(.nan) == "--")
+        #expect(SensorFormatters.formatLongitude(.infinity) == "--")
+    }
+
+    @Test func formatHeadingNaN() {
+        #expect(SensorFormatters.formatHeadingDegrees(.nan) == "--")
+        #expect(SensorFormatters.formatHeadingDegrees(.infinity) == "--")
+    }
+
+    @Test func formatHeadingNegative() {
+        #expect(SensorFormatters.formatHeadingDegrees(-10.0) == "350°")
+        #expect(SensorFormatters.formatHeadingDegrees(-90.0) == "270°")
+    }
 }
 
 struct LocationManagerTests {
@@ -164,13 +191,13 @@ struct LocationManagerTests {
         #expect(manager.speedKph == 0.0)
     }
 
-    @Test func initialValuesAreZero() {
+    @Test func initialValues() {
         let manager = LocationManager()
         #expect(manager.latitude == 0.0)
         #expect(manager.longitude == 0.0)
         #expect(manager.speed == 0.0)
         #expect(manager.altitude == 0.0)
-        #expect(manager.course == 0.0)
+        #expect(manager.course == -1.0)
         #expect(manager.heading == 0.0)
     }
 }
