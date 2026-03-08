@@ -136,14 +136,10 @@ extension ColorTheme {
     var labelKey: LocalizedStringKey {
         switch self {
         case .bee: return "themeBee"
+        case .lava: return "themeLava"
         case .ocean: return "themeOcean"
         case .forest: return "themeForest"
-        case .sunset: return "themeSunset"
-        case .berry: return "themeBerry"
         case .slate: return "themeSlate"
-        case .arctic: return "themeArctic"
-        case .lava: return "themeLava"
-        case .mint: return "themeMint"
         }
     }
 }
