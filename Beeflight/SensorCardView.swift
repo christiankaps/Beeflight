@@ -113,7 +113,7 @@ struct PositionCardView: View {
 
             HStack(spacing: 0) {
                 VStack(spacing: 4) {
-                    Text(SensorFormatters.formatCoordinate(latitude))
+                    Text(SensorFormatters.formatLatitude(latitude))
                         .font(.title2)
                         .fontWeight(.semibold)
                         .fontDesign(.monospaced)
@@ -127,7 +127,7 @@ struct PositionCardView: View {
                 .frame(maxWidth: .infinity)
 
                 VStack(spacing: 4) {
-                    Text(SensorFormatters.formatCoordinate(longitude))
+                    Text(SensorFormatters.formatLongitude(longitude))
                         .font(.title2)
                         .fontWeight(.semibold)
                         .fontDesign(.monospaced)

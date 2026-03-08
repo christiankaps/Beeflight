@@ -3,21 +3,36 @@ import Testing
 
 struct SensorFormattersTests {
 
-    // MARK: - formatCoordinate
+    // MARK: - formatLatitude / formatLongitude
 
-    @Test func formatCoordinatePositive() {
-        let result = SensorFormatters.formatCoordinate(48.123456)
-        #expect(result == "48.123456°")
+    @Test func formatLatitudePositive() {
+        let result = SensorFormatters.formatLatitude(48.123456)
+        #expect(result == "48.123456°N")
     }
 
-    @Test func formatCoordinateNegative() {
-        let result = SensorFormatters.formatCoordinate(-122.987654)
-        #expect(result == "-122.987654°")
+    @Test func formatLatitudeNegative() {
+        let result = SensorFormatters.formatLatitude(-33.868820)
+        #expect(result == "33.868820°S")
     }
 
-    @Test func formatCoordinateZero() {
-        let result = SensorFormatters.formatCoordinate(0.0)
-        #expect(result == "0.000000°")
+    @Test func formatLatitudeZero() {
+        let result = SensorFormatters.formatLatitude(0.0)
+        #expect(result == "0.000000°N")
+    }
+
+    @Test func formatLongitudePositive() {
+        let result = SensorFormatters.formatLongitude(11.582000)
+        #expect(result == "11.582000°E")
+    }
+
+    @Test func formatLongitudeNegative() {
+        let result = SensorFormatters.formatLongitude(-122.987654)
+        #expect(result == "122.987654°W")
+    }
+
+    @Test func formatLongitudeZero() {
+        let result = SensorFormatters.formatLongitude(0.0)
+        #expect(result == "0.000000°E")
     }
 
     // MARK: - formatSpeed

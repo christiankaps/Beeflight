@@ -1,9 +1,16 @@
 import Foundation
 
 enum SensorFormatters {
-    /// Format coordinate as degrees with 6 decimal places
-    static func formatCoordinate(_ value: Double) -> String {
-        String(format: "%.6f°", value)
+    /// Format latitude as degrees with a N/S suffix
+    static func formatLatitude(_ value: Double) -> String {
+        let suffix = value >= 0 ? "N" : "S"
+        return String(format: "%.6f°%@", abs(value), suffix)
+    }
+
+    /// Format longitude as degrees with an E/W suffix
+    static func formatLongitude(_ value: Double) -> String {
+        let suffix = value >= 0 ? "E" : "W"
+        return String(format: "%.6f°%@", abs(value), suffix)
     }
 
     /// Format speed for the given unit system (input: km/h)
