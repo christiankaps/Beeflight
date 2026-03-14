@@ -98,6 +98,7 @@ struct CompassCardView: View {
 struct PositionCardView: View {
     let latitude: Double
     let longitude: Double
+    var countryName: String? = nil
     var themeColors: ThemeColors = ColorTheme.bee.colors
 
     var body: some View {
@@ -139,6 +140,12 @@ struct PositionCardView: View {
                         .foregroundStyle(themeColors.unitText)
                 }
                 .frame(maxWidth: .infinity)
+            }
+
+            if let countryName {
+                Text(countryName)
+                    .font(.caption)
+                    .foregroundStyle(themeColors.unitText)
             }
         }
         .frame(maxWidth: .infinity)

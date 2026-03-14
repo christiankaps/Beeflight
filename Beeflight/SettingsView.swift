@@ -82,6 +82,22 @@ struct SettingsView: View {
             } header: {
                 Text("settingsSectionAppearance")
             }
+
+            Section {
+                Link(destination: URL(string: "https://www.naturalearthdata.com")!) {
+                    HStack {
+                        Label("creditsNaturalEarth", systemImage: "globe")
+                        Spacer()
+                        Image(systemName: "arrow.up.right.square")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                }
+            } header: {
+                Text("settingsSectionCredits")
+            } footer: {
+                Text("creditsNaturalEarthFooter")
+            }
         }
         .navigationTitle("settingsTitle")
         .tint(settings.themeColors.tint)

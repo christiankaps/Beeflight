@@ -565,6 +565,57 @@
         }
       }
     },
+    "creditsNaturalEarth" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Natural Earth Geodaten"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Natural Earth Geo Data"
+          }
+        }
+      }
+    },
+    "creditsNaturalEarthFooter" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ländergrenzen von Natural Earth. Gemeinfrei (Public Domain)."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Country boundaries from Natural Earth. Public domain."
+          }
+        }
+      }
+    },
+    "settingsSectionCredits" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Datenquellen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Data Sources"
+          }
+        }
+      }
+    },
     "settingsSectionSensors" : {
       "extractionState" : "manual",
       "localizations" : {

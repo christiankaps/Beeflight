@@ -9,6 +9,9 @@ struct DashboardView: View {
     @State private var orientationOffset: Double = 0.0
     @State private var hasTriggeredThemeSwitch = false
     @State private var pullOverscroll: CGFloat = 0
+    @State private var cachedCountryName: String?
+    @State private var cachedCountryLat: Double = .nan
+    @State private var cachedCountryLon: Double = .nan
 
     private let columns = [
         GridItem(.flexible(), spacing: 12),
@@ -54,7 +57,7 @@ struct DashboardView: View {
                     UTCTimeCardView(latitude: locationManager.latitude, longitude: locationManager.longitude, themeColors: theme)
 
                     // GPS Position (full width)
-                    PositionCardView(latitude: locationManager.latitude, longitude: locationManager.longitude, themeColors: theme)
+                    PositionCardView(latitude: locationManager.latitude, longitude: locationManager.longitude, countryName: cachedCountryName, themeColors: theme)
 
                     LazyVGrid(columns: columns, spacing: 12) {
                         // Altitude
@@ -174,7 +177,12 @@ struct DashboardView: View {
             }
         }
         .tint(settings.themeColors.tint)
-        .onAppear { updateOrientationOffset() }
+        .onAppear {
+            updateOrientationOffset()
+            updateCountryIfNeeded()
+        }
+        .onChange(of: locationManager.latitude) { updateCountryIfNeeded() }
+        .onChange(of: locationManager.longitude) { updateCountryIfNeeded() }
         .onReceive(NotificationCenter.default.publisher(for: UIDevice.orientationDidChangeNotification)) { _ in
             updateOrientationOffset()
         }
@@ -197,6 +205,22 @@ struct DashboardView: View {
             orientationOffset = 180
         default:
             orientationOffset = 0
+        }
+    }
+
+    /// Re-detect the country only when the position has moved significantly (~11 km).
+    private func updateCountryIfNeeded() {
+        let lat = locationManager.latitude
+        let lon = locationManager.longitude
+        if abs(lat - cachedCountryLat) < 0.1 && abs(lon - cachedCountryLon) < 0.1 {
+            return
+        }
+        cachedCountryLat = lat
+        cachedCountryLon = lon
+        if let country = CountryDetector.country(at: lat, longitude: lon) {
+            cachedCountryName = CountryDetector.localizedCountryName(for: country)
+        } else {
+            cachedCountryName = nil
         }
     }
 

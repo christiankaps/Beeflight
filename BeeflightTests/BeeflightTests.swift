@@ -217,3 +217,53 @@ struct AltimeterManagerTests {
         #expect(manager.pressureHpa == 0.0)
     }
 }
+
+struct CountryDetectorTests {
+
+    @Test func detectGermany() {
+        let country = CountryDetector.country(at: 51.1657, longitude: 10.4515)
+        #expect(country != nil)
+        #expect(country?.isoCode == "DE")
+    }
+
+    @Test func detectUnitedStates() {
+        let country = CountryDetector.country(at: 38.8951, longitude: -77.0364)
+        #expect(country != nil)
+        #expect(country?.isoCode == "US")
+    }
+
+    @Test func detectJapan() {
+        let country = CountryDetector.country(at: 35.6762, longitude: 139.6503)
+        #expect(country != nil)
+        #expect(country?.isoCode == "JP")
+    }
+
+    @Test func detectAustralia() {
+        let country = CountryDetector.country(at: -25.2744, longitude: 133.7751)
+        #expect(country != nil)
+        #expect(country?.isoCode == "AU")
+    }
+
+    @Test func detectBrazil() {
+        let country = CountryDetector.country(at: -14.2350, longitude: -51.9253)
+        #expect(country != nil)
+        #expect(country?.isoCode == "BR")
+    }
+
+    @Test func oceanReturnsNil() {
+        let country = CountryDetector.country(at: 0.0, longitude: -30.0)
+        #expect(country == nil)
+    }
+
+    @Test func localizedNameWithISOCode() {
+        let country = CountryDetector.Country(isoCode: "DE", name: "Germany")
+        let name = CountryDetector.localizedCountryName(for: country)
+        #expect(!name.isEmpty)
+    }
+
+    @Test func localizedNameFallbackForEmptyISO() {
+        let country = CountryDetector.Country(isoCode: "", name: "Somaliland")
+        let name = CountryDetector.localizedCountryName(for: country)
+        #expect(name == "Somaliland")
+    }
+}
