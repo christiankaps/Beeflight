@@ -4,6 +4,8 @@ A fully offline iOS sensor dashboard that displays real-time GPS, barometric, mo
 
 ## Features
 
+![App Screenshot](/doc/AppScreenshot_1.png)
+
 ### Sensor Dashboard
 
 | Tile | Source | Details |
