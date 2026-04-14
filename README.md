@@ -85,6 +85,25 @@ Three instances with different time constants:
 - Climb rate capped at ±50 m/s
 - Minimum dt guard of 10 ms on climb rate derivation
 
+### Offline Map
+
+A fully offline map view reachable from the dashboard toolbar shows the
+current location over tiles rendered from a local `.mbtiles` (SQLite)
+archive via `MKTileOverlay` (`canReplaceMapContent = true`, so Apple Maps
+tiles are never fetched).
+
+- A tiny global base pack (zoom 0–3) is bundled with the app, so the map
+  works worldwide on first launch with no network.
+- The user can download a single whole-globe pack at one of two detail
+  tiers (Standard z0–6 ≈ 200 MB, Detailed z0–8 ≈ 2 GB). Region / bbox
+  selection is deliberately not supported — downloads are globe-wide only.
+- At most one downloaded pack is stored at a time; choosing a new tier
+  replaces the previous.
+- Three tracking modes: Off, Follow, Follow-with-heading.
+- Downloads are cancelled when the app backgrounds (NFR-2.4.6).
+- Real tile URLs must be configured in `Beeflight/Map/MapTileTier.swift`
+  before shipping; the committed URLs are placeholders.
+
 ### Offline Country Detection
 
 The app detects the user's country without any network connection:

@@ -26,6 +26,31 @@ enum UnitSystem: String, CaseIterable, Identifiable {
     var id: String { rawValue }
 }
 
+enum MapFollowMode: String, CaseIterable, Identifiable {
+    case off = "off"
+    case follow = "follow"
+    case followWithHeading = "followWithHeading"
+
+    var id: String { rawValue }
+
+    /// Next state for a single-button cycle.
+    var next: MapFollowMode {
+        switch self {
+        case .off: return .follow
+        case .follow: return .followWithHeading
+        case .followWithHeading: return .off
+        }
+    }
+
+    var sfSymbol: String {
+        switch self {
+        case .off: return "location"
+        case .follow: return "location.fill"
+        case .followWithHeading: return "location.north.line.fill"
+        }
+    }
+}
+
 enum UpdateRate: String, CaseIterable, Identifiable {
     case maximum = "maximum"
     case high = "high"
@@ -63,6 +88,7 @@ final class AppSettings {
     private static let unitSystemKey = "unitSystem"
     private static let autoUpdateRateKey = "autoUpdateRate"
     private static let lockPortraitKey = "lockPortrait"
+    private static let mapFollowModeKey = "mapFollowMode"
 
     var autoUpdateRate: Bool {
         didSet {
@@ -98,6 +124,12 @@ final class AppSettings {
     var unitSystem: UnitSystem {
         didSet {
             UserDefaults.standard.set(unitSystem.rawValue, forKey: Self.unitSystemKey)
+        }
+    }
+
+    var mapFollowMode: MapFollowMode {
+        didSet {
+            UserDefaults.standard.set(mapFollowMode.rawValue, forKey: Self.mapFollowModeKey)
         }
     }
 
@@ -142,5 +174,12 @@ final class AppSettings {
         }
 
         lockPortrait = UserDefaults.standard.bool(forKey: Self.lockPortraitKey)
+
+        if let stored = UserDefaults.standard.string(forKey: Self.mapFollowModeKey),
+           let mode = MapFollowMode(rawValue: stored) {
+            mapFollowMode = mode
+        } else {
+            mapFollowMode = .follow
+        }
     }
 }

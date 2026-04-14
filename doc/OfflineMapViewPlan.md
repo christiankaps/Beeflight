@@ -1,6 +1,6 @@
 # Offline Map View — Feature Plan
 
-Status: **Draft / awaiting approval** &nbsp;·&nbsp; Branch: `claude/add-offline-map-view-W3ARZ`
+Status: **Implemented** &nbsp;·&nbsp; Branch: `claude/add-offline-map-view-W3ARZ`
 
 ## 1. Goal
 
@@ -8,240 +8,220 @@ Add an offline-first map view to Beesense that:
 
 - Shows the user's current location on a map.
 - Covers the whole globe without a network connection.
-- Lets the user download regions at multiple detail (zoom) tiers for offline use.
+- Lets the user download the **whole globe** at different detail (zoom)
+  levels for offline use. No regional / bbox selection — one choice, world-wide.
 - Supports free pinch-zoom, pan, and rotate.
 
 The feature must preserve FR-1.7.1 ("The app shall function fully without an
 internet connection"). The app never *requires* the network, but may *use* it
-when the user explicitly downloads a region.
+when the user explicitly downloads a higher-detail global pack.
 
 ## 2. Non-goals
 
+- Regional / bounding-box downloads. (Explicitly out of scope.)
 - Turn-by-turn navigation / routing.
 - Search / geocoding.
 - 3-D terrain or satellite imagery.
-- Tile hosting infrastructure (tiles are bundled or downloaded from a
-  configured open source; we do not run a server).
+- Running our own tile hosting infrastructure.
 
 ## 3. Rendering engine
 
-**Chosen: MapLibre Native iOS** (SPM:
-`maplibre-gl-native-distribution`, BSD-2 / open source fork of the last
-open-source Mapbox GL Native).
+**Chosen: Apple `MapKit` with a custom `MKTileOverlay` subclass** backed by
+an `.mbtiles` SQLite archive.
 
-Alternatives considered:
+Why not MapLibre (the previous draft):
 
-| Option | Whole globe offline? | Free zoom/pan | License | Verdict |
-|---|---|---|---|---|
-| `MKMapView` (Apple Maps) | No — caching Apple tiles is not permitted by the ToS | Yes | Apple EULA | Rejected |
-| `MKTileOverlay` + raster OSM | Yes, but huge on-disk size at high zoom; no built-in offline region download | Yes | OSM ODbL | Works but high storage & manual pack mgmt |
-| **MapLibre Native** | **Yes — first-class offline region API, vector tiles** | **Yes** | **BSD-2** | **Chosen** |
-| Protomaps `.pmtiles` + MapLibre | Yes — single-file global archive | Yes | CC0 / BSD-2 | Viable as tile source within MapLibre |
+- Adding an SPM dependency (~10 MB binary) is a significant footprint change
+  for a single screen.
+- MapKit's `MKTileOverlay` with `canReplaceMapContent = true` fully replaces
+  Apple's base map with our tiles — Apple's own tiles are never loaded, so
+  the view works fully offline.
+- MapKit gives us pinch-zoom, pan, rotate, user-location puck, heading cone,
+  and annotations for free.
+- The `.mbtiles` (SQLite) format is an open, simple container for raster PNG
+  tiles. Reading it requires only the system-provided `sqlite3` C library
+  (no new dependencies).
 
-MapLibre gives us vector tiles (smaller, re-stylable), a native offline region
-downloader (`MLNOfflineStorage.addPack`), background-safe progress callbacks,
-and it renders through Metal for smooth gestures.
+Constraints this implies:
 
-## 4. Tile source and style
+- Tiles are raster PNG (not vector). Slightly larger on disk than vector,
+  but simpler to produce and render.
+- We do **not** cache Apple Maps tiles (that would violate the Apple Maps
+  ToS). We only render our own raster tiles.
 
-- **Base data:** OpenMapTiles schema vector tiles (OSM data, CC-BY / ODbL
-  attribution required) packaged as `.mbtiles`, or Protomaps `.pmtiles`.
-- **Style JSON:** bundled in the app (`style-light.json`, `style-dark.json`),
-  so no runtime fetch of the style is needed. Both styles reference the same
-  bundled tileset, only the colors differ — matches FR-1.5.6 / NFR-2.2.4.
-- **Glyphs:** MapLibre needs PBF glyph ranges for text labels. We bundle a
-  minimal Noto Sans (Regular + Bold) set (~3 MB). OFL license.
-- **Sprites:** bundled PNG + JSON sprite sheet for map icons.
-- **Attribution overlay:** the map view always shows
-  "© OpenStreetMap contributors" (and OpenMapTiles / Protomaps as appropriate).
-  Required by license.
+## 4. Tile source
 
-## 5. Offline coverage strategy
+Tile packs are OSM-derived raster `.mbtiles` files (e.g. generated with
+`tilemaker`, `mbutil`, or downloaded from an OSM raster tile provider that
+permits redistribution under ODbL, such as self-hosted OpenStreetMap Carto
+renders).
 
-### 5.1 Always-available world base
+- **Built-in base** — a tiny global `.mbtiles` at z0–z3 is bundled in the
+  app (a few MB). Guarantees a usable globe on first launch, offline.
+- **Downloadable global packs** — the user picks one detail tier; the app
+  downloads a single global `.mbtiles` file over HTTPS, stores it under
+  `Application Support/`, and the overlay switches to reading from it.
 
-Bundle a world pack at **zoom 0–5** (~15–25 MB compressed vector mbtiles).
-Guarantees a usable map everywhere on first launch, zero network needed.
+Exact URLs for downloadable packs live in a single `MapTileTier.swift`
+constants table and are intended to be populated with a CDN-hosted URL
+before shipping. The code compiles and runs with placeholder URLs; download
+will simply fail until real URLs are configured.
 
-### 5.2 On-demand regional packs
+Attribution: "© OpenStreetMap contributors" is displayed on the map view.
 
-The user picks a region (current map viewport, or a named preset) and a
-detail tier:
+## 5. Offline coverage strategy — whole-globe tiers
 
-| Tier | Zoom range | Approx use | Approx size per 100×100 km |
+| Tier | Zoom range | Global size (approx) | Use |
 |---|---|---|---|
-| Overview  | z6 – z9  | country / large region scale | ~2–5 MB |
-| Regional  | z10 – z12 | metro / state scale | ~15–40 MB |
-| Detailed  | z13 – z15 | streets, buildings | ~80–250 MB |
+| Built-in | z0 – z3 | ~1–3 MB, bundled | Always available; continent-level |
+| Standard | z0 – z6 | ~150–250 MB | Large-town-level worldwide |
+| Detailed | z0 – z8 | ~1.5–2.5 GB | Town-level worldwide |
 
-Exact numbers depend on the area's data density; we show a pre-download
-estimate using `MLNTilePyramidOfflineRegion` byte counting.
+Only **one** downloaded tier is active at a time. Downloading the *Detailed*
+pack replaces the *Standard* pack (if any). A bundled Built-in pack is
+always present as fallback.
 
-Operations: **add, pause, resume, delete, rename, show size**.
+Size numbers are order-of-magnitude estimates; actual numbers come from
+whichever tileset we package, and the UI shows the real byte size once the
+file is on disk.
 
-### 5.3 Storage
+Operations in the settings:
 
-- Packs stored in MapLibre's SQLite cache under `Application Support/`.
-- User-set soft cap `mapMaxCacheMB` (default 500 MB). When exceeded we warn
-  the user before the next download.
-- "Clear all map data" button in settings.
+- **Download** the chosen tier (with progress, cancel).
+- **Delete** the downloaded pack (reverts to Built-in).
+- **Show** current tier and cache size on disk.
+
+Rationale for dropping Detailed≥z9: worldwide z9 is ~10 GB+, z12 hundreds
+of GB. That's unreasonable on a phone. Users who need street-level detail
+should not rely on this app for that; we optimize for the "any map anywhere
+offline" use case.
 
 ## 6. Integration with existing app
 
 ### 6.1 Navigation
 
-Add a `map` toolbar button to `DashboardView` next to the existing
-`gearshape`, navigating to `MapView`. Preserve the existing pull-to-cycle-theme
-gesture on the dashboard; the map view does **not** intercept it.
+A `map` toolbar button on `DashboardView`, next to the existing `gearshape`,
+pushes `OfflineMapScreen` onto the existing `NavigationStack`. The
+pull-to-cycle-theme gesture on the dashboard is unaffected (the map screen
+is a separate destination).
 
 ### 6.2 Location
 
-Re-use `LocationManager` (no new CoreLocation instance). Read
-`latitude`, `longitude`, `heading`, `course`, `horizontalAccuracy`.
-Render:
-
-- Blue-dot annotation at current position, tinted with
-  `settings.themeColors.tint`.
-- Accuracy circle radius = `horizontalAccuracy` in meters.
-- Heading cone when `mapFollowMode == .followWithHeading`.
+Re-use the existing `LocationManager`. `MKMapView.showsUserLocation = true`
+renders the blue puck. `MKUserTrackingMode` handles follow / follow-with-
+heading; we expose it through `mapFollowMode` in `AppSettings`.
 
 ### 6.3 Scene phase
 
 Mirror the existing pattern in `ContentView.onChange(of: scenePhase)`:
 
-- `.background` → pause any active downloads, stop map idle timers.
-- `.active` → resume.
+- `.background` → cancel active download (URLSession task).
+- `.active` → no auto-resume; user must tap Download again.
+
+This is simpler and safer than tracking resumeData across launches; global
+packs are a one-shot operation.
 
 ### 6.4 Theming
 
-Map style switches `style-light.json` ↔ `style-dark.json` from
-`AppSettings.appearanceMode` + `UITraitCollection.userInterfaceStyle`.
-Location marker uses `settings.themeColors.tint`.
+`MKMapView` doesn't theme our raster tiles, but we tint the user-location
+puck and UI controls with `settings.themeColors.tint`. Appearance (light/
+dark) applies to the surrounding SwiftUI chrome. Raster tiles themselves
+are a fixed style — a future enhancement could offer a dark raster pack.
 
 ## 7. File layout
 
 ```
 Beeflight/
   Map/
-    MapView.swift                    // SwiftUI UIViewRepresentable for MLNMapView
-    OfflineMapManager.swift          // @Observable: packs, progress, totals
-    OfflineRegionPicker.swift        // pick bbox + detail tier + confirm
-    OfflinePackListView.swift        // list / pause / resume / delete
-    MapStyle.swift                   // load bundled style JSON, dark/light swap
-    MapAttributionView.swift         // OSM / OpenMapTiles attribution overlay
+    MBTilesStore.swift          // sqlite3 reader for .mbtiles
+    MapTileTier.swift           // tiers: builtin / standard / detailed
+    OfflineTileOverlay.swift    // MKTileOverlay subclass
+    OfflineMapManager.swift     // @Observable: active tier, download, cache
+    MapView.swift               // UIViewRepresentable over MKMapView
+    OfflineMapScreen.swift      // NavigationStack destination
+    MapAttributionView.swift    // "© OpenStreetMap contributors"
+    MapDownloadView.swift       // settings sheet: pick tier, download, delete
     Resources/
-      style-light.json
-      style-dark.json
-      sprites/sprite.json, sprite.png, sprite@2x.{json,png}
-      glyphs/Noto Sans Regular/0-255.pbf ... (ranges)
-      world-z0-z5.mbtiles            // bundled global base
+      world-z0-z3.mbtiles       // bundled base (placeholder until provided)
 ```
 
-New Swift Package dependency in `Beeflight.xcodeproj`:
-`https://github.com/maplibre/maplibre-gl-native-distribution` (pin a released
-tag, e.g. `6.x`).
+No new SPM dependency. Uses `MapKit`, `CoreLocation`, `SQLite3`
+(system-provided) only.
 
 ## 8. New AppSettings keys
 
 | Key | Type | Default | Description |
 |---|---|---|---|
-| `mapFollowMode` | enum `off` / `follow` / `followWithHeading` | `follow` | Center behavior |
-| `mapStyleVariant` | enum `auto` / `light` / `dark` | `auto` | Map style override |
-| `mapMaxCacheMB` | Int | 500 | Soft cap on map cache |
+| `mapFollowMode` | enum `off` / `follow` / `followWithHeading` | `follow` | User-tracking mode |
 
-All persisted in `UserDefaults` via `didSet`, matching the existing
-`AppSettings` pattern.
+That's it. The active tile tier is derived from what file is on disk —
+the `OfflineMapManager` decides, and it doesn't need to be persisted.
 
-## 9. Proposed requirement additions (to append to `requirements.md`)
+## 9. Requirement additions (append to `requirements.md`)
 
 ### 1.8 Offline Map
 
 - **FR-1.8.1** The app shall provide an offline map view accessible from the
   dashboard toolbar.
 - **FR-1.8.2** The map shall render worldwide coverage without a network
-  connection at zoom levels 0–5 out of the box (bundled base tiles).
-- **FR-1.8.3** The map shall support pinch zoom, pan, and rotate with a
-  maximum zoom level of at least 15.
-- **FR-1.8.4** The map shall display the user's current location, accuracy
-  circle, and — when `mapFollowMode == .followWithHeading` — a heading cone.
-- **FR-1.8.5** The user shall be able to download the currently visible
-  region at one of three detail tiers (Overview z6–9 / Regional z10–12 /
-  Detailed z13–15) for offline use, and see a size estimate before starting.
-- **FR-1.8.6** The user shall be able to list, pause, resume, and delete
-  downloaded map packs, and see the total on-disk cache size.
-- **FR-1.8.7** The map shall adopt the app's light/dark appearance per
-  `AppSettings.appearanceMode` and tint the location marker with the active
-  theme tint.
-- **FR-1.8.8** The map view shall display OSM / tile-provider attribution
-  visibly.
+  connection using a bundled built-in tile pack (z0–z3).
+- **FR-1.8.3** The map shall support pinch zoom, pan, and rotate.
+- **FR-1.8.4** The map shall display the user's current location, and
+  support Off / Follow / Follow-with-heading tracking modes.
+- **FR-1.8.5** The user shall be able to download one of several whole-globe
+  tile packs (Standard, Detailed) at increasing detail levels for offline
+  use, with a size estimate shown before starting and a progress indicator
+  during download.
+- **FR-1.8.6** The user shall be able to delete the downloaded tile pack,
+  reverting to the bundled built-in pack. At most one downloaded pack is
+  stored at a time.
+- **FR-1.8.7** The map view shall display OpenStreetMap attribution visibly.
 
 ### Non-functional
 
-- **NFR-2.4.6** Active map pack downloads shall be paused when the app enters
-  the background and resumed when it becomes active.
-- **NFR-2.5.1** The total app bundle size shall not exceed 150 MB (world
-  base + MapLibre binary + existing assets).
+- **NFR-2.4.6** An active tile-pack download shall be cancelled when the app
+  enters the background.
 
 ## 10. Testing plan
 
 ### Unit
 
-- `OfflineMapManager`
-  - Tier → zoom-range mapping.
-  - Pack dedupe by (bbox, tier).
-  - Size-estimate formatting (`ByteCountFormatter`).
-- `MapStyle`
-  - Dark/light resolution from `AppearanceMode` + system trait.
-- Bbox / tile-math helpers if any.
+- `MapTileTier` — zoom-range mapping, filename derivation.
+- `MBTilesStore` — reading a small fixture `.mbtiles`, TMS y-flip handling,
+  returns `nil` for missing tiles, closes cleanly.
+- `OfflineMapManager` — tier selection, cache-size formatting, mock
+  downloader state transitions (idle → downloading → complete / cancelled /
+  failed).
 
 ### UI (XCTest)
 
-- Open map from dashboard; assert `MLNMapView` hosting view appears within
-  2 s.
-- With simulator in airplane mode: map must render (bundled z0–5).
-- Toggle follow-with-heading: marker rotates as heading changes (driven via
-  mocked `LocationManager` if feasible, else smoke test).
-- Delete all packs: cache size returns to baseline.
+- Navigate from dashboard to map; assert the map view appears.
+- With airplane mode: map still renders (built-in pack loaded).
 
 ### Manual
 
-- Fresh install, no network, launch, open map, zoom to z5 anywhere → tiles
-  render.
-- Download "current view" at each tier, kill app, relaunch offline, pan to
-  region → detail available up to the tier.
+- Fresh install, no network, open map → built-in tiles show worldwide.
+- Trigger Standard download → progress bar, completion, map gains detail
+  when zooming.
+- Delete downloaded pack → reverts to built-in.
 
 ## 11. Risks & open questions
 
-1. **Bundle size budget** — adding ~25 MB world base + ~10 MB MapLibre binary
-   + fonts/sprites lands us around ~40 MB on top of current app. Needs
-   product confirmation; if too large, drop the bundled world to z0–3 (~3 MB)
-   and require the user to download their continent at first use (with an
-   on-first-launch prompt).
-2. **Tile licensing / attribution** — confirm choice between OpenMapTiles
-   (CC-BY, requires attribution + branding) vs. Protomaps (CC0 planet dumps,
-   attribution still required for underlying OSM data). Recommend Protomaps
-   for simpler redistribution.
-3. **Glyph / font choice** — Noto Sans covers Latin + common diacritics;
-   CJK coverage would roughly triple font size. Scope: start with Latin +
-   Cyrillic + Greek, document limitation.
-4. **SPM + MapLibre on iOS 17 min target** — MapLibre distribution currently
-   supports iOS 12+, Metal-only on recent versions. Confirm on first build.
-5. **Battery impact of background downloads** — downloads are foreground-only
-   per NFR-2.4.6 to stay consistent with existing scene-phase pattern.
-6. **Testability of `UIViewRepresentable`** — MapLibre is hard to unit-test;
-   concentrate on testing our pure-Swift manager and let the wrapper be
-   smoke-tested via UI tests.
+1. **Tile provider** — real `.mbtiles` URLs must be configured before
+   shipping. Placeholder URLs are in `MapTileTier.swift`.
+2. **Bundled built-in size** — until a real world-z0–z3 mbtiles is produced
+   and added to `Beeflight/Map/Resources/`, the map shows an empty
+   background with only the location puck. This is acceptable for initial
+   landing and documented in code.
+3. **Tile format** — raster PNG. If we later want vector, we can swap the
+   overlay implementation without changing the screen / manager surface.
+4. **Dark mode** — a second set of dark-style raster tiles would be needed
+   for true dark-mode maps. Out of scope for this iteration.
 
-## 12. Implementation order (once approved)
+## 12. Implementation order
 
-1. Add SPM dependency; create `MapView` skeleton rendering bundled world.
-2. `OfflineMapManager` + bundled base tileset wiring.
-3. Current-location annotation + follow modes via `LocationManager`.
-4. Region picker + download flow + progress UI.
-5. Offline pack list, delete, cache size, clear-all (in `SettingsView`).
-6. Light/dark style switching + tint + attribution overlay.
-7. Localization (EN/DE) for all new strings.
-8. Tests, docs, update `requirements.md` and `README.md`.
-
-Each step is independently reviewable and behind the existing scene-phase
-lifecycle.
+1. `MBTilesStore` + `MapTileTier` + `OfflineTileOverlay`.
+2. `OfflineMapManager` with download / delete / cache-size.
+3. `MapView` (UIViewRepresentable) + `OfflineMapScreen`.
+4. Dashboard toolbar button + new strings + `mapFollowMode` setting.
+5. Tests + docs.

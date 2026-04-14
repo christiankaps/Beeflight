@@ -1057,6 +1057,153 @@
           }
         }
       }
+    },
+    "mapTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Karte" } },
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Map" } }
+      }
+    },
+    "mapAttribution" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "© OpenStreetMap-Mitwirkende" } },
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "© OpenStreetMap contributors" } }
+      }
+    },
+    "mapFollowButton" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Verfolgungsmodus" } },
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Tracking mode" } }
+      }
+    },
+    "mapDownloadButton" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Karten herunterladen" } },
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Download maps" } }
+      }
+    },
+    "mapDownloadTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Offline-Karten" } },
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Offline maps" } }
+      }
+    },
+    "mapDownloadHeader" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Detailstufe" } },
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Detail level" } }
+      }
+    },
+    "mapDownloadFooter" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Lädt ein Kartenpaket für die gesamte Welt herunter. Es kann jeweils nur eine heruntergeladene Stufe gleichzeitig gespeichert werden; eine neue Auswahl ersetzt die vorherige." } },
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Downloads a whole-globe tile pack. Only one downloaded tier is stored at a time; choosing a new one replaces the previous." } }
+      }
+    },
+    "mapDownloadAction" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Herunterladen" } },
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Download" } }
+      }
+    },
+    "mapDownloadUnavailable" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Download-URL nicht konfiguriert" } },
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Download URL not configured" } }
+      }
+    },
+    "mapDownloadCancel" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Abbrechen" } },
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Cancel" } }
+      }
+    },
+    "mapDownloadDone" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Fertig" } },
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Done" } }
+      }
+    },
+    "mapDownloadBusy" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Anderer Download läuft" } },
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Another download is running" } }
+      }
+    },
+    "mapInstalledHeader" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Installiertes Paket" } },
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Installed pack" } }
+      }
+    },
+    "mapDeleteDownloaded" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Heruntergeladene Karten löschen" } },
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Delete downloaded maps" } }
+      }
+    },
+    "mapErrorHeader" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Fehler" } },
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Error" } }
+      }
+    },
+    "mapBuiltInInstalled" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Im App-Bundle enthalten" } },
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Bundled with the app" } }
+      }
+    },
+    "mapBuiltInMissing" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Basis-Kachelsatz fehlt" } },
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Base tile set missing" } }
+      }
+    },
+    "mapTierInstalled" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Installiert" } },
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Installed" } }
+      }
+    },
+    "mapTierBuiltIn" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Basis (Zoom 0–3)" } },
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Built-in (zoom 0–3)" } }
+      }
+    },
+    "mapTierStandard" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Standard (Zoom 0–6)" } },
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Standard (zoom 0–6)" } }
+      }
+    },
+    "mapTierDetailed" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Detailliert (Zoom 0–8)" } },
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Detailed (zoom 0–8)" } }
+      }
     }
   },
   "version" : "1.1"

@@ -6,6 +6,7 @@ struct DashboardView: View {
     var altimeterManager: AltimeterManager
     var motionManager: MotionManager
     @Bindable var settings: AppSettings
+    var offlineMapManager: OfflineMapManager
     @State private var orientationOffset: Double = 0.0
     @State private var hasTriggeredThemeSwitch = false
     @State private var pullOverscroll: CGFloat = 0
@@ -165,6 +166,14 @@ struct DashboardView: View {
             .navigationTitle("dashboardTitle")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    NavigationLink {
+                        OfflineMapScreen(settings: settings, manager: offlineMapManager)
+                    } label: {
+                        Image(systemName: "map")
+                    }
+                    .accessibilityLabel(Text("mapTitle"))
+                }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     NavigationLink {
                         SettingsView(settings: settings) {
@@ -240,6 +249,7 @@ struct DashboardView: View {
         locationManager: LocationManager(),
         altimeterManager: AltimeterManager(),
         motionManager: MotionManager(),
-        settings: AppSettings()
+        settings: AppSettings(),
+        offlineMapManager: OfflineMapManager()
     )
 }

@@ -51,6 +51,16 @@
 ### 1.7 Connectivity
 - FR-1.7.1: The app shall function fully without an internet connection.
 
+### 1.8 Offline Map
+- FR-1.8.1: The app shall provide an offline map view accessible from the dashboard toolbar.
+- FR-1.8.2: The map shall render worldwide coverage without a network connection using a bundled built-in tile pack (zoom levels 0–3).
+- FR-1.8.3: The map shall support pinch zoom, pan, and rotate.
+- FR-1.8.4: The map shall display the user's current location and support three tracking modes: Off, Follow, and Follow-with-heading.
+- FR-1.8.5: The user shall be able to download a whole-globe tile pack at a selected detail tier (Standard, zoom 0–6, or Detailed, zoom 0–8) for offline use, with progress shown during download and cancellation supported.
+- FR-1.8.6: At most one downloaded tile pack shall be stored at a time; downloading a new tier replaces any previously downloaded pack.
+- FR-1.8.7: The user shall be able to delete the downloaded tile pack, reverting to the bundled built-in pack.
+- FR-1.8.8: The map view shall display OpenStreetMap attribution visibly.
+
 ## 2. Non-Functional Requirements
 
 ### 2.1 Localization
@@ -76,3 +86,4 @@
 - NFR-2.4.3: Sunrise/sunset calculations shall be cached and only recomputed when the UTC day changes.
 - NFR-2.4.4: Theme colors shall be cached on the settings object and updated only when the theme changes.
 - NFR-2.4.5: Sensor updates shall be stopped when the app enters the background and resumed when it becomes active.
+- NFR-2.4.6: An active tile-pack download shall be cancelled when the app enters the background.

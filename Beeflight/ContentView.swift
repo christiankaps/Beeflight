@@ -6,6 +6,7 @@ struct ContentView: View {
     @State private var locationManager: LocationManager
     @State private var altimeterManager = AltimeterManager()
     @State private var motionManager = MotionManager()
+    @State private var offlineMapManager = OfflineMapManager()
     @State private var sensorsStarted = false
     @State private var showPermissionAlert = false
     @State private var permissionAlertMessage: LocalizedStringKey = ""
@@ -24,7 +25,8 @@ struct ContentView: View {
             locationManager: locationManager,
             altimeterManager: altimeterManager,
             motionManager: motionManager,
-            settings: settings
+            settings: settings,
+            offlineMapManager: offlineMapManager
         )
         .preferredColorScheme(settings.appearanceMode.colorScheme)
         .onAppear {
@@ -64,6 +66,9 @@ struct ContentView: View {
                 locationManager.stopUpdates()
                 altimeterManager.stopUpdates()
                 motionManager.stopUpdates()
+                // Per NFR-2.4.6: cancel any in-flight map pack download on
+                // backgrounding. The user can restart it when they return.
+                offlineMapManager.cancelDownload()
             default:
                 break
             }
