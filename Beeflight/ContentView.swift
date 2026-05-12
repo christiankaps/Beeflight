@@ -1,5 +1,5 @@
 import SwiftUI
-import CoreMotion
+import CoreLocation
 
 struct ContentView: View {
     @State private var settings: AppSettings
@@ -105,11 +105,13 @@ struct ContentView: View {
     private func checkPermissions() {
         let locationDenied = locationManager.authorizationStatus == .denied
             || locationManager.authorizationStatus == .restricted
-        let motionDenied = CMMotionActivityManager.authorizationStatus() == .denied
-            || CMMotionActivityManager.authorizationStatus() == .restricted
+        let requiredSensorsUnavailable = !altimeterManager.isAvailable || !motionManager.isAvailable
 
-        if locationDenied || motionDenied {
+        if locationDenied {
             permissionAlertMessage = "permissionAlertMessage"
+            showPermissionAlert = true
+        } else if requiredSensorsUnavailable {
+            permissionAlertMessage = "sensorUnavailableAlertMessage"
             showPermissionAlert = true
         }
     }

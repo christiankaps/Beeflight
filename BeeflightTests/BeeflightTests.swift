@@ -1,4 +1,5 @@
 import Testing
+import CoreLocation
 @testable import Beeflight
 
 struct SensorFormattersTests {
@@ -199,6 +200,82 @@ struct LocationManagerTests {
         #expect(manager.altitude == 0.0)
         #expect(manager.course == -1.0)
         #expect(manager.heading == 0.0)
+        #expect(manager.speedIsValid == false)
+        #expect(manager.altitudeIsValid == false)
+        #expect(manager.courseIsValid == false)
+        #expect(manager.headingIsValid == false)
+    }
+
+    @Test func validLocationUpdateMarksMetricsValid() {
+        let manager = LocationManager()
+        let location = CLLocation(
+            coordinate: CLLocationCoordinate2D(latitude: 48.1351, longitude: 11.5820),
+            altitude: 520,
+            horizontalAccuracy: 4,
+            verticalAccuracy: 6,
+            course: 90,
+            courseAccuracy: 2,
+            speed: 12,
+            speedAccuracy: 1,
+            timestamp: Date()
+        )
+
+        manager.locationManager(CLLocationManager(), didUpdateLocations: [location])
+
+        #expect(manager.locationIsFresh == true)
+        #expect(manager.speedIsValid == true)
+        #expect(manager.altitudeIsValid == true)
+        #expect(manager.courseIsValid == true)
+        #expect(manager.speedKph == 43.2)
+        #expect(manager.altitude == 520)
+        #expect(manager.course == 90)
+    }
+
+    @Test func invalidLocationUpdateClearsInvalidMetricFlags() {
+        let manager = LocationManager()
+        let location = CLLocation(
+            coordinate: CLLocationCoordinate2D(latitude: 48.1351, longitude: 11.5820),
+            altitude: 520,
+            horizontalAccuracy: -1,
+            verticalAccuracy: -1,
+            course: -1,
+            courseAccuracy: -1,
+            speed: -1,
+            speedAccuracy: -1,
+            timestamp: Date()
+        )
+
+        manager.locationManager(CLLocationManager(), didUpdateLocations: [location])
+
+        #expect(manager.speedIsValid == false)
+        #expect(manager.altitudeIsValid == false)
+        #expect(manager.courseIsValid == false)
+        #expect(manager.speed == 0)
+        #expect(manager.course == -1)
+    }
+
+    @Test func staleLocationUpdateDoesNotReplacePosition() {
+        let manager = LocationManager()
+        let location = CLLocation(
+            coordinate: CLLocationCoordinate2D(latitude: 48.1351, longitude: 11.5820),
+            altitude: 520,
+            horizontalAccuracy: 4,
+            verticalAccuracy: 6,
+            course: 90,
+            courseAccuracy: 2,
+            speed: 12,
+            speedAccuracy: 1,
+            timestamp: Date(timeIntervalSinceNow: -30)
+        )
+
+        manager.locationManager(CLLocationManager(), didUpdateLocations: [location])
+
+        #expect(manager.locationIsFresh == false)
+        #expect(manager.latitude == 0.0)
+        #expect(manager.longitude == 0.0)
+        #expect(manager.speedIsValid == false)
+        #expect(manager.altitudeIsValid == false)
+        #expect(manager.courseIsValid == false)
     }
 }
 
@@ -215,6 +292,13 @@ struct AltimeterManagerTests {
         let manager = AltimeterManager()
         manager.pressure = 0.0
         #expect(manager.pressureHpa == 0.0)
+    }
+
+    @Test func stopUpdatesClearsClimbingSpeed() {
+        let manager = AltimeterManager()
+        manager.climbingSpeed = 4.2
+        manager.stopUpdates()
+        #expect(manager.climbingSpeed == 0.0)
     }
 }
 
@@ -253,6 +337,26 @@ struct CountryDetectorTests {
     @Test func oceanReturnsNil() {
         let country = CountryDetector.country(at: 0.0, longitude: -30.0)
         #expect(country == nil)
+    }
+
+    @Test func polygonHoleIsExcluded() {
+        let outerRing = [
+            [0.0, 0.0],
+            [10.0, 0.0],
+            [10.0, 10.0],
+            [0.0, 10.0],
+            [0.0, 0.0]
+        ]
+        let hole = [
+            [3.0, 3.0],
+            [7.0, 3.0],
+            [7.0, 7.0],
+            [3.0, 7.0],
+            [3.0, 3.0]
+        ]
+
+        #expect(CountryDetector.polygonContainsForTesting(outerRing: outerRing, holes: [hole], latitude: 2.0, longitude: 2.0))
+        #expect(!CountryDetector.polygonContainsForTesting(outerRing: outerRing, holes: [hole], latitude: 5.0, longitude: 5.0))
     }
 
     @Test func localizedNameWithISOCode() {

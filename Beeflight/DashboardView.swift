@@ -63,7 +63,7 @@ struct DashboardView: View {
                         // Altitude
                         SensorCardView(
                             title: "sensorAltitude",
-                            value: SensorFormatters.formatAltitude(locationManager.altitude, unitSystem: settings.unitSystem),
+                            value: locationManager.altitudeIsValid ? SensorFormatters.formatAltitude(locationManager.altitude, unitSystem: settings.unitSystem) : "--",
                             unit: altitudeUnitKey,
                             icon: "mountain.2",
                             themeColors: theme
@@ -81,7 +81,7 @@ struct DashboardView: View {
                         // Speed
                         SensorCardView(
                             title: "sensorSpeed",
-                            value: SensorFormatters.formatSpeed(locationManager.speedKph, unitSystem: settings.unitSystem),
+                            value: locationManager.speedIsValid ? SensorFormatters.formatSpeed(locationManager.speedKph, unitSystem: settings.unitSystem) : "--",
                             unit: speedUnitKey,
                             icon: "speedometer",
                             themeColors: theme
@@ -102,12 +102,12 @@ struct DashboardView: View {
                             degrees: locationManager.heading,
                             arrowRotation: -locationManager.heading + orientationOffset,
                             icon: "safari",
-                            isValid: true,
+                            isValid: locationManager.headingIsValid,
                             themeColors: theme
                         )
 
                         // Course (Ground Track)
-                        let courseValid = locationManager.course >= 0
+                        let courseValid = locationManager.courseIsValid && locationManager.headingIsValid
                         CompassCardView(
                             title: "sensorCourse",
                             degrees: locationManager.course,
@@ -120,7 +120,7 @@ struct DashboardView: View {
                         // G-Force
                         SensorCardView(
                             title: "sensorGForce",
-                            value: SensorFormatters.formatGForce(motionManager.gForce),
+                            value: motionManager.isAvailable ? SensorFormatters.formatGForce(motionManager.gForce) : "--",
                             unit: "unitG",
                             icon: "gauge.with.dots.needle.33percent",
                             themeColors: theme

@@ -6,6 +6,8 @@ struct UTCTimeCardView: View {
     var themeColors: ThemeColors = ColorTheme.bee.colors
 
     @State private var cachedDayOfYear: Int = -1
+    @State private var cachedLatitude: Double = .nan
+    @State private var cachedLongitude: Double = .nan
     @State private var sunriseString: String = "--:--"
     @State private var sunsetString: String = "--:--"
 
@@ -52,8 +54,14 @@ struct UTCTimeCardView: View {
 
     private func updateSolarIfNeeded(for date: Date) {
         let day = Self.utcCalendar.ordinality(of: .day, in: .year, for: date) ?? -1
-        guard day != cachedDayOfYear else { return }
+        let roundedLatitude = (latitude * 100).rounded() / 100
+        let roundedLongitude = (longitude * 100).rounded() / 100
+        guard day != cachedDayOfYear ||
+            roundedLatitude != cachedLatitude ||
+            roundedLongitude != cachedLongitude else { return }
         cachedDayOfYear = day
+        cachedLatitude = roundedLatitude
+        cachedLongitude = roundedLongitude
         let solar = SolarCalculator.sunriseSunset(latitude: latitude, longitude: longitude, date: date)
         sunriseString = solar.sunrise.map { Self.sunTimeFormatter.string(from: $0) } ?? "--:--"
         sunsetString = solar.sunset.map { Self.sunTimeFormatter.string(from: $0) } ?? "--:--"

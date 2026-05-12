@@ -12,7 +12,19 @@ enum CountryDetector {
     private struct ParsedCountry {
         let isoCode: String
         let name: String
-        let outerRings: [[[Double]]] // one outer ring per polygon; each ring = [[lon, lat], ...]
+        let polygons: [ParsedPolygon]
+    }
+
+    private struct ParsedPolygon {
+        let outerRing: [[Double]]
+        let holes: [[[Double]]]
+
+        func contains(longitude: Double, latitude: Double) -> Bool {
+            guard CountryDetector.pointInPolygon(longitude: longitude, latitude: latitude, ring: outerRing) else {
+                return false
+            }
+            return !holes.contains { CountryDetector.pointInPolygon(longitude: longitude, latitude: latitude, ring: $0) }
+        }
     }
 
     // MARK: - Parsed Storage (lazy, loaded once)
@@ -24,8 +36,8 @@ enum CountryDetector {
     /// Returns the country at the given coordinates, or nil if over ocean / unknown.
     static func country(at latitude: Double, longitude: Double) -> Country? {
         for country in countries {
-            for ring in country.outerRings {
-                if pointInPolygon(longitude: longitude, latitude: latitude, ring: ring) {
+            for polygon in country.polygons {
+                if polygon.contains(longitude: longitude, latitude: latitude) {
                     let iso = (country.isoCode == "-99" || country.isoCode.isEmpty)
                         ? "" : country.isoCode
                     return Country(isoCode: iso, name: country.name)
@@ -69,33 +81,42 @@ enum CountryDetector {
             let isoCode = (properties["ISO_A2"] as? String) ?? ""
             let name = (properties["NAME"] as? String) ?? ""
 
-            var outerRings: [[[Double]]] = []
+            var polygons: [ParsedPolygon] = []
 
             if geomType == "Polygon" {
-                if let ring = parseOuterRing(from: rawCoords) {
-                    outerRings.append(ring)
+                if let polygon = parsePolygon(from: rawCoords) {
+                    polygons.append(polygon)
                 }
             } else if geomType == "MultiPolygon" {
                 for polyCoords in rawCoords {
                     if let rings = polyCoords as? [Any],
-                       let ring = parseOuterRing(from: rings) {
-                        outerRings.append(ring)
+                       let polygon = parsePolygon(from: rings) {
+                        polygons.append(polygon)
                     }
                 }
             }
 
-            if !outerRings.isEmpty {
-                result.append(ParsedCountry(isoCode: isoCode, name: name, outerRings: outerRings))
+            if !polygons.isEmpty {
+                result.append(ParsedCountry(isoCode: isoCode, name: name, polygons: polygons))
             }
         }
 
         return result
     }
 
-    /// Extract the outer ring (index 0) from a polygon's coordinate array.
-    private static func parseOuterRing(from rawRings: [Any]) -> [[Double]]? {
+    /// Extract the outer ring and any inner rings from a polygon's coordinate array.
+    private static func parsePolygon(from rawRings: [Any]) -> ParsedPolygon? {
         guard let firstRing = rawRings.first as? [[NSNumber]] else { return nil }
-        return firstRing.map { pair in pair.map { $0.doubleValue } }
+        let outerRing = coordinates(from: firstRing)
+        let holes = rawRings.dropFirst().compactMap { rawRing -> [[Double]]? in
+            guard let ring = rawRing as? [[NSNumber]] else { return nil }
+            return coordinates(from: ring)
+        }
+        return ParsedPolygon(outerRing: outerRing, holes: holes)
+    }
+
+    private static func coordinates(from ring: [[NSNumber]]) -> [[Double]] {
+        ring.map { pair in pair.map { $0.doubleValue } }
     }
 
     // MARK: - Point-in-Polygon (Ray Casting)
@@ -120,4 +141,15 @@ enum CountryDetector {
 
         return inside
     }
+
+    #if DEBUG
+    static func polygonContainsForTesting(
+        outerRing: [[Double]],
+        holes: [[[Double]]],
+        latitude: Double,
+        longitude: Double
+    ) -> Bool {
+        ParsedPolygon(outerRing: outerRing, holes: holes).contains(longitude: longitude, latitude: latitude)
+    }
+    #endif
 }

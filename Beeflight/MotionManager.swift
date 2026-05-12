@@ -8,13 +8,18 @@ final class MotionManager {
     private static let logger = Logger(subsystem: Bundle.main.bundleIdentifier ?? "Beeflight", category: "MotionManager")
 
     var gForce: Double = 1.0
+    private(set) var isAvailable: Bool
 
     private let motionManager = CMMotionManager()
     private var emaFilter = EMAFilter(timeConstant: 1.0, initialValue: 1.0)
 
+    init() {
+        isAvailable = motionManager.isAccelerometerAvailable
+    }
+
     func startUpdates() {
-        guard motionManager.isAccelerometerAvailable,
-              !motionManager.isAccelerometerActive else { return }
+        isAvailable = motionManager.isAccelerometerAvailable
+        guard isAvailable, !motionManager.isAccelerometerActive else { return }
 
         motionManager.accelerometerUpdateInterval = 1.0 / 10.0
         motionManager.startAccelerometerUpdates(to: .main) { [weak self] data, error in

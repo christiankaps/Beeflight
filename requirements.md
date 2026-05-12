@@ -1,4 +1,4 @@
-# Beesense - Requirements
+# BeeSense - Requirements
 
 ## 1. Functional Requirements
 
@@ -36,7 +36,7 @@
 - FR-1.5.4: The selected update rate shall control the GPS distance filter and compass heading filter.
 - FR-1.5.5: The app shall allow the user to select a unit system: Metric (km/h, m, m/s, hPa), Imperial (mph, ft, ft/min, inHg), or Aviation (kn, ft, ft/min, hPa).
 - FR-1.5.6: The app shall allow the user to choose the appearance mode: System, Light, or Dark.
-- FR-1.5.7: The app shall allow the user to select a color theme from 9 predefined palettes: Bee, Sunset, Lava, Berry, Ocean, Arctic, Mint, Forest, Slate (ordered by color spectrum).
+- FR-1.5.7: The app shall allow the user to select a color theme from 5 predefined palettes: Bee, Lava, Ocean, Forest, Slate.
 - FR-1.5.8: Each color theme shall provide adaptive light and dark mode color variants.
 - FR-1.5.9: The app shall allow the user to lock the orientation to portrait mode.
 - FR-1.5.10: All settings shall be persisted between app launches using UserDefaults.
@@ -45,8 +45,9 @@
 
 ### 1.6 Permissions
 - FR-1.6.1: The app shall request location permission (When In Use) on first launch.
-- FR-1.6.2: The app shall check location and motion permissions on every app launch and when returning to the foreground.
-- FR-1.6.3: If permissions are denied or restricted, the app shall display an alert with an option to open the device Settings app.
+- FR-1.6.2: The app shall check location permissions and required sensor availability on every app launch and when returning to the foreground.
+- FR-1.6.3: If location permissions are denied or restricted, the app shall display an alert with an option to open the device Settings app.
+- FR-1.6.4: If required motion sensors are unavailable on the current device, the app shall display a localized alert explaining that some sensor values may be missing.
 
 ### 1.7 Connectivity
 - FR-1.7.1: The app shall function fully without an internet connection.
@@ -59,7 +60,7 @@
 - NFR-2.1.3: Localization shall use String Catalogs (.xcstrings).
 
 ### 2.2 Appearance
-- NFR-2.2.1: The app name shall be "Beesense".
+- NFR-2.2.1: The app name shall be "BeeSense".
 - NFR-2.2.2: The app icon shall depict a bee with light, dark, and tinted variants.
 - NFR-2.2.3: The app shall support portrait and landscape orientation, with an optional setting to lock to portrait.
 - NFR-2.2.4: The app shall support light and dark mode, configurable via settings (System, Light, Dark).
@@ -73,6 +74,6 @@
 ### 2.4 Performance
 - NFR-2.4.1: Release builds shall use GCC optimization level 3 and Swift whole module optimization.
 - NFR-2.4.2: Battery monitoring shall be enabled to support automatic update rate adjustment.
-- NFR-2.4.3: Sunrise/sunset calculations shall be cached and only recomputed when the UTC day changes.
+- NFR-2.4.3: Sunrise/sunset calculations shall be cached and only recomputed when the UTC day or rounded position changes.
 - NFR-2.4.4: Theme colors shall be cached on the settings object and updated only when the theme changes.
 - NFR-2.4.5: Sensor updates shall be stopped when the app enters the background and resumed when it becomes active.

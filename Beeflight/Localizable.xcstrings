@@ -684,6 +684,23 @@
         }
       }
     },
+    "sensorUnavailableAlertMessage" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Einige Sensoren sind auf diesem Gerät nicht verfügbar. Werte für Barometer oder G-Kraft können fehlen."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Some sensors are not available on this device. Barometer or G-force values may be missing."
+          }
+        }
+      }
+    },
     "settingsUpdateRate" : {
       "extractionState" : "manual",
       "localizations" : {

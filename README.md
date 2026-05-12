@@ -45,7 +45,7 @@ Pull down on the dashboard to cycle through themes (with haptic feedback).
 
 ### State Management
 
-All data models use the `@Observable` macro (Observation framework, iOS 17+) instead of the older Combine-based `ObservableObject` / `@Published` pattern. Views receive managers as plain parameters; SwiftUI automatically tracks property access and re-renders only what changed.
+All data models use the `@Observable` macro (Observation framework) instead of the older Combine-based `ObservableObject` / `@Published` pattern. Views receive managers as plain parameters; SwiftUI automatically tracks property access and re-renders only what changed.
 
 ### Sensor Managers
 
@@ -90,7 +90,7 @@ Three instances with different time constants:
 The app detects the user's country without any network connection:
 
 1. **Data source**: Natural Earth 1:110m country boundaries bundled as simplified GeoJSON (194 KB, 177 countries). Public domain.
-2. **Algorithm**: Ray-casting point-in-polygon test against each country's outer boundary rings. Supports both `Polygon` and `MultiPolygon` geometries.
+2. **Algorithm**: Ray-casting point-in-polygon test against each country's outer boundary rings, with inner holes excluded. Supports both `Polygon` and `MultiPolygon` geometries.
 3. **Localization**: Country names are resolved via `Locale.current.localizedString(forRegionCode:)` using the ISO 3166-1 alpha-2 code, falling back to the English name from the dataset.
 4. **Performance**: Lookups are cached and only re-run when the position moves more than ~0.1 degrees (~11 km).
 
@@ -102,7 +102,7 @@ Sunrise and sunset times are computed offline using the NOAA solar position algo
 - Solar declination from fractional year
 - Hour angle solved for zenith 90.833° (standard refraction + solar disk radius)
 - Returns `nil` for polar day/night conditions
-- Cached per UTC day-of-year to avoid redundant computation
+- Cached per UTC day-of-year and rounded position to avoid redundant computation while still updating after meaningful movement
 
 ### Adaptive Update Rate
 
@@ -142,12 +142,12 @@ Compass arrows compensate for device rotation by reading `UIWindowScene.interfac
 
 ### Unit Tests (Swift Testing framework)
 
-45 tests using `@Test` and `#expect`:
+Focused tests using `@Test` and `#expect`:
 
 - **SensorFormatters**: Latitude/longitude formatting, speed, altitude, climbing speed, pressure, heading normalization, cardinal directions, NaN/Infinity guards
-- **LocationManager**: Speed conversion, initial values
-- **AltimeterManager**: Pressure unit conversion
-- **CountryDetector**: Detection for 5 countries (DE, US, JP, AU, BR), ocean returns nil, localized name resolution, ISO code fallback
+- **LocationManager**: Speed conversion, initial values, metric validity flags
+- **AltimeterManager**: Pressure unit conversion, stop/reset behavior
+- **CountryDetector**: Detection for 5 countries (DE, US, JP, AU, BR), ocean returns nil, polygon-hole exclusion, localized name resolution, ISO code fallback
 
 ### UI Tests (XCTest)
 
@@ -157,9 +157,9 @@ Compass arrows compensate for device rotation by reading `UIWindowScene.interfac
 
 ## Requirements
 
-- iOS 17.0+
-- Xcode 15+
-- Swift 5.9+
+- iOS 18.6+
+- Xcode 16+
+- Swift 5+
 - Device with GPS, barometer, and accelerometer (full functionality)
 
 ## Data Sources

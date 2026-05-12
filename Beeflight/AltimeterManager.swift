@@ -50,6 +50,9 @@ final class AltimeterManager {
     func stopUpdates() {
         altimeter.stopRelativeAltitudeUpdates()
         isRunning = false
+        previousRelativeAltitude = nil
+        previousTimestamp = nil
+        climbingSpeed = 0
         climbEMA.reset()
     }
 }
