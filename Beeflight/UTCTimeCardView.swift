@@ -1,4 +1,3 @@
-import Combine
 import SwiftUI
 
 struct UTCTimeCardView: View {
@@ -6,14 +5,11 @@ struct UTCTimeCardView: View {
     var longitude: Double
     var themeColors: ThemeColors = ColorTheme.bee.colors
 
-    @State private var now = Date()
     @State private var cachedDayOfYear: Int = -1
     @State private var cachedLatitude: Double = .nan
     @State private var cachedLongitude: Double = .nan
     @State private var sunriseString: String = "--:--"
     @State private var sunsetString: String = "--:--"
-
-    private let clockTimer = Timer.publish(every: 0.25, tolerance: 0.05, on: .main, in: .common).autoconnect()
 
     private static let utcTimeFormatter: DateFormatter = {
         let f = DateFormatter()
@@ -96,16 +92,23 @@ struct UTCTimeCardView: View {
                         .foregroundStyle(themeColors.cardAccent)
                 }
 
-                Text(Self.utcTimeFormatter.string(from: now))
-                    .font(.title)
-                    .fontWeight(.semibold)
-                    .fontDesign(.monospaced)
-                    .foregroundStyle(themeColors.valueText)
+                TimelineView(.animation(minimumInterval: 0.2)) { context in
+                    VStack(spacing: 4) {
+                        Text(Self.utcTimeFormatter.string(from: context.date))
+                            .font(.title)
+                            .fontWeight(.semibold)
+                            .fontDesign(.monospaced)
+                            .foregroundStyle(themeColors.valueText)
 
-                Text(Self.utcDateFormatter.string(from: now))
-                    .font(.subheadline)
-                    .fontDesign(.monospaced)
-                    .foregroundStyle(themeColors.unitText)
+                        Text(Self.utcDateFormatter.string(from: context.date))
+                            .font(.subheadline)
+                            .fontDesign(.monospaced)
+                            .foregroundStyle(themeColors.unitText)
+                    }
+                    .onChange(of: Self.utcCalendar.ordinality(of: .day, in: .year, for: context.date) ?? -1) {
+                        updateSolarIfNeeded(for: context.date)
+                    }
+                }
 
                 Text(Self.utcOffsetString)
                     .font(.caption2)
@@ -129,16 +132,12 @@ struct UTCTimeCardView: View {
         .padding()
         .background(themeColors.cardBackground)
         .clipShape(RoundedRectangle(cornerRadius: 12))
-        .onReceive(clockTimer) { tick in
-            guard Int(tick.timeIntervalSince1970) != Int(now.timeIntervalSince1970) else { return }
-            now = tick
-            updateSolarIfNeeded(for: tick)
-        }
         .onAppear {
             let currentDate = Date()
-            now = currentDate
             updateSolarIfNeeded(for: currentDate)
         }
+        .onChange(of: latitude) { updateSolarIfNeeded(for: Date()) }
+        .onChange(of: longitude) { updateSolarIfNeeded(for: Date()) }
     }
 }
 
