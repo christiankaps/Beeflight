@@ -1,9 +1,6 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
-    "" : {
-
-    },
     "appearanceDark" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -51,6 +48,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "System"
+          }
+        }
+      }
+    },
+    "creditsNaturalEarth" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Natural Earth Geodaten"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Natural Earth Geo Data"
+          }
+        }
+      }
+    },
+    "creditsNaturalEarthFooter" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ländergrenzen von Natural Earth. Gemeinfrei (Public Domain)."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Country boundaries from Natural Earth. Public domain."
           }
         }
       }
@@ -463,6 +494,23 @@
         }
       }
     },
+    "sensorUnavailableAlertMessage" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Einige Sensoren sind auf diesem Gerät nicht verfügbar. Werte für Barometer oder G-Kraft können fehlen."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Some sensors are not available on this device. Barometer or G-force values may be missing."
+          }
+        }
+      }
+    },
     "sensorUTCTime" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -514,23 +562,6 @@
         }
       }
     },
-    "settingsLockPortrait" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Hochformat sperren"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Lock Portrait"
-          }
-        }
-      }
-    },
     "settingsColorTheme" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -548,6 +579,23 @@
         }
       }
     },
+    "settingsLockPortrait" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hochformat sperren"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lock Portrait"
+          }
+        }
+      }
+    },
     "settingsSectionAppearance" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -561,40 +609,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Appearance"
-          }
-        }
-      }
-    },
-    "creditsNaturalEarth" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Natural Earth Geodaten"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Natural Earth Geo Data"
-          }
-        }
-      }
-    },
-    "creditsNaturalEarthFooter" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ländergrenzen von Natural Earth. Gemeinfrei (Public Domain)."
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Country boundaries from Natural Earth. Public domain."
           }
         }
       }
@@ -680,23 +694,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Unit System"
-          }
-        }
-      }
-    },
-    "sensorUnavailableAlertMessage" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Einige Sensoren sind auf diesem Gerät nicht verfügbar. Werte für Barometer oder G-Kraft können fehlen."
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Some sensors are not available on this device. Barometer or G-force values may be missing."
           }
         }
       }
@@ -1054,23 +1051,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "signal quality"
-          }
-        }
-      }
-    },
-    "unitUTC" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Koordinierte Weltzeit"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Coordinated Universal Time"
           }
         }
       }

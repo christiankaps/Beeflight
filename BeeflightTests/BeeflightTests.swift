@@ -77,18 +77,6 @@ struct SensorFormattersTests {
         #expect(result == "0.00")
     }
 
-    // MARK: - formatDegrees
-
-    @Test func formatDegreesNormal() {
-        let result = SensorFormatters.formatDegrees(180.7)
-        #expect(result == "181°")
-    }
-
-    @Test func formatDegreesZero() {
-        let result = SensorFormatters.formatDegrees(0.0)
-        #expect(result == "0°")
-    }
-
     // MARK: - formatHeadingDegrees
 
     @Test func formatHeadingNorth() {

@@ -10,6 +10,7 @@ struct SettingsView: View {
                 Toggle(isOn: $settings.autoUpdateRate) {
                     Label("settingsAutoUpdateRate", systemImage: "bolt.batteryblock")
                 }
+                .accessibilityIdentifier("autoUpdateRateToggle")
 
                 Picker(selection: $settings.updateRate) {
                     ForEach(UpdateRate.allCases) { rate in

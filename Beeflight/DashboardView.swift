@@ -173,6 +173,7 @@ struct DashboardView: View {
                     } label: {
                         Image(systemName: "gearshape")
                     }
+                    .accessibilityIdentifier("settingsButton")
                 }
             }
         }

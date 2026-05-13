@@ -23,12 +23,36 @@ final class BeeflightUITests: XCTestCase {
     }
 
     @MainActor
-    func testExample() throws {
-        // UI tests must launch the application that they test.
+    func testDashboardCanOpenSettings() throws {
         let app = XCUIApplication()
-        app.launch()
+        app.launchArguments += ["-AppleLanguages", "(en)", "-AppleLocale", "en_US"]
 
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
+        addUIInterruptionMonitor(withDescription: "System permissions") { alert in
+            if alert.buttons["Allow While Using App"].exists {
+                alert.buttons["Allow While Using App"].tap()
+                return true
+            }
+            if alert.buttons["OK"].exists {
+                alert.buttons["OK"].tap()
+                return true
+            }
+            if alert.buttons["Don\u{2019}t Allow"].exists {
+                alert.buttons["Don\u{2019}t Allow"].tap()
+                return true
+            }
+            return false
+        }
+
+        app.launch()
+        app.tap()
+
+        XCTAssertTrue(app.navigationBars["BeeSense"].waitForExistence(timeout: 5))
+
+        let settingsButton = app.buttons["settingsButton"]
+        XCTAssertTrue(settingsButton.waitForExistence(timeout: 2))
+        settingsButton.tap()
+
+        XCTAssertTrue(app.switches["autoUpdateRateToggle"].waitForExistence(timeout: 5))
     }
 
     @MainActor

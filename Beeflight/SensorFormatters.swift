@@ -54,11 +54,6 @@ enum SensorFormatters {
         }
     }
 
-    /// Format heading/course as degrees with 0 decimal places
-    static func formatDegrees(_ degrees: Double) -> String {
-        String(format: "%.0f°", degrees)
-    }
-
     /// Format compass heading degrees only (normalized to 0–359)
     static func formatHeadingDegrees(_ degrees: Double) -> String {
         guard degrees.isFinite else { return "--" }

@@ -151,6 +151,7 @@ Focused tests using `@Test` and `#expect`:
 
 ### UI Tests (XCTest)
 
+- Dashboard-to-settings navigation assertion
 - App launch verification
 - Launch performance measurement via `XCTApplicationLaunchMetric`
 - Screenshot capture across UI configurations
