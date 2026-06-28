@@ -134,7 +134,7 @@ Compass arrows compensate for device rotation by reading `UIWindowScene.interfac
 
 - **SwiftUI** with `NavigationStack`
 - **Dashboard**: Full-width time and position tiles, then a 2-column `LazyVGrid` for sensor cards
-- **Live clock**: `TimelineView(.periodic(from:by: 1))` drives a 1-second refresh without `Timer`
+- **Live clock**: `TimelineView(.periodic)` starts on a whole-second boundary and refreshes once per second without `Timer`
 - **Pull-to-switch theme**: `onScrollGeometryChange` detects overscroll > 80pt, triggers theme cycle with `UIImpactFeedbackGenerator` haptic feedback
 - **Settings**: `Form`-based with `.pickerStyle(.navigationLink)`, color swatch circles in the theme picker
 

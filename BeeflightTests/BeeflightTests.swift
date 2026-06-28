@@ -290,6 +290,44 @@ struct AltimeterManagerTests {
     }
 }
 
+struct UTCTimeCardViewTests {
+
+    @Test func nextWholeSecondKeepsWholeSecondDate() {
+        let date = Date(timeIntervalSince1970: 1_700_000_000)
+        let next = UTCTimeCardView.nextWholeSecond(after: date)
+
+        #expect(next == date)
+    }
+
+    @Test func nextWholeSecondRoundsFractionalDateUp() {
+        let date = Date(timeIntervalSince1970: 1_700_000_000.125)
+        let next = UTCTimeCardView.nextWholeSecond(after: date)
+
+        #expect(next.timeIntervalSince1970 == 1_700_000_001)
+    }
+
+    @Test func utcDayOrdinalUsesUTCMidnight() throws {
+        let beforeMidnight = try #require(Self.date(year: 2026, month: 6, day: 28, hour: 23, minute: 59, second: 59))
+        let afterMidnight = try #require(Self.date(year: 2026, month: 6, day: 29, hour: 0, minute: 0, second: 0))
+
+        #expect(UTCTimeCardView.utcDayOrdinal(for: beforeMidnight) == 179)
+        #expect(UTCTimeCardView.utcDayOrdinal(for: afterMidnight) == 180)
+    }
+
+    private static func date(year: Int, month: Int, day: Int, hour: Int, minute: Int, second: Int) -> Date? {
+        DateComponents(
+            calendar: UTCTimeCardView.utcCalendar,
+            timeZone: TimeZone(identifier: "UTC"),
+            year: year,
+            month: month,
+            day: day,
+            hour: hour,
+            minute: minute,
+            second: second
+        ).date
+    }
+}
+
 struct CountryDetectorTests {
 
     @Test func detectGermany() {

@@ -10,6 +10,7 @@ struct UTCTimeCardView: View {
     @State private var cachedLongitude: Double = .nan
     @State private var sunriseString: String = "--:--"
     @State private var sunsetString: String = "--:--"
+    @State private var clockStartDate = Self.nextWholeSecond(after: Date())
 
     private static let utcTimeFormatter: DateFormatter = {
         let f = DateFormatter()
@@ -46,14 +47,23 @@ struct UTCTimeCardView: View {
         }
     }
 
-    private static var utcCalendar: Calendar = {
+    static var utcCalendar: Calendar = {
         var cal = Calendar(identifier: .gregorian)
         cal.timeZone = TimeZone(identifier: "UTC")!
         return cal
     }()
 
+    static func utcDayOrdinal(for date: Date) -> Int {
+        utcCalendar.ordinality(of: .day, in: .year, for: date) ?? -1
+    }
+
+    static func nextWholeSecond(after date: Date) -> Date {
+        let nextSecond = ceil(date.timeIntervalSince1970)
+        return Date(timeIntervalSince1970: nextSecond)
+    }
+
     private func updateSolarIfNeeded(for date: Date) {
-        let day = Self.utcCalendar.ordinality(of: .day, in: .year, for: date) ?? -1
+        let day = Self.utcDayOrdinal(for: date)
         let roundedLatitude = (latitude * 100).rounded() / 100
         let roundedLongitude = (longitude * 100).rounded() / 100
         guard day != cachedDayOfYear ||
@@ -92,7 +102,7 @@ struct UTCTimeCardView: View {
                         .foregroundStyle(themeColors.cardAccent)
                 }
 
-                TimelineView(.animation(minimumInterval: 0.2)) { context in
+                TimelineView(.periodic(from: clockStartDate, by: 1)) { context in
                     VStack(spacing: 4) {
                         Text(Self.utcTimeFormatter.string(from: context.date))
                             .font(.title)
@@ -105,7 +115,7 @@ struct UTCTimeCardView: View {
                             .fontDesign(.monospaced)
                             .foregroundStyle(themeColors.unitText)
                     }
-                    .onChange(of: Self.utcCalendar.ordinality(of: .day, in: .year, for: context.date) ?? -1) {
+                    .onChange(of: Self.utcDayOrdinal(for: context.date)) {
                         updateSolarIfNeeded(for: context.date)
                     }
                 }
